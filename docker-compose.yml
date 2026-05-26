@@ -1,0 +1,13 @@
+services:
+  won.api:
+    image: ${DOCKER_REGISTRY-}wonapi
+    build:
+      context: .
+      dockerfile: src/Won.Api/Dockerfile
+
+  won.web:
+    image: ${DOCKER_REGISTRY-}wonweb
+    build:
+      context: .
+      dockerfile: src/Won.Web/Won.Web/Dockerfile
+
