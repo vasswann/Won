@@ -4,13 +4,13 @@
 <h3>Trip Details for trip number: @Id</h3>
 
 
-@if(thisTrip == null)
+@if(MyTrip == null)
 {
     <p>No trip exists with the ID of @Id</p>
 }
 else
 {
-    <GetTripCard ThisTrip="thisTrip"/>
+    <GetTripCard ThisTrip="MyTrip"/>
 }
 
 
@@ -18,9 +18,9 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    private Trip? thisTrip;
+    private Trip? MyTrip;
 
-    public List<Trip> MyTrips = new List<Trip>()
+    public List<Trip> TestTrips = new List<Trip>()
     {
         new Trip
         {
@@ -59,6 +59,6 @@ else
 
     protected override void OnInitialized()
     {
-        thisTrip = MyTrips.FirstOrDefault(Trip => Trip.TripId == Id);
+        MyTrip = TestTrips.FirstOrDefault(Trip => Trip.TripId == Id);
     }
 }
