@@ -1,0 +1,94 @@
+﻿<form method="POST" action="/Trips/Create" style="max-width: 600px; padding: 20px;">
+
+    <input type="hidden" name="TripId" value="0" />
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Trip Name</label>
+            <div class="field">
+                <input class="input" type="text" name="Name" placeholder="Summer Vacation 2026" required />
+            </div>
+            <p class="help is-danger">Trip Name Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Start Date</label>
+            <div class="control has-icons-left">
+                <input class="input" type="date" name="StartDate" required />
+                <span class="icon is-small is-left">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </div>
+            <p class="help is-danger">Start Date Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">End Date</label>
+            <div class="control has-icons-left">
+                <input class="input" type="date" name="EndDate" required />
+                <span class="icon is-small is-left">
+                    <i class="fas fa-calendar-check"></i>
+                </span>
+            </div>
+            <p class="help is-danger">End Date Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Location</label>
+            <div class="field">
+                <input class="input" type="text" name="Location" placeholder="Paris, France" required />
+            </div>
+            <p class="help is-danger">Location Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Details</label>
+            <div class="control">
+                <div class="field">
+                    <textarea class="textarea" name="Details" placeholder="Add itinerary notes, packing lists, or hotel details..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Budget (£)</label>
+            <div class="field">
+                <input class="input" type="number" name="Budget" min="0" placeholder="1500" required />
+            </div>
+            <p class="help is-danger">Budget Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Group Size</label>
+            <div class="field">
+                <input class="input" type="number" name="GroupSize" min="1" placeholder="4" required />
+            </div>
+            <p class="help is-danger">Group Size Is Required</p>
+        </div>
+    </div>
+
+    <div class="field is-grouped is-grouped-right">
+        <div class="control">
+            <button type="button" class="button is-light">Cancel</button>
+        </div>
+        <div class="control">
+            <button type="submit" class="button is-link">Save Trip</button>
+        </div>
+    </div>
+
+</form>
+@code {
+
+}
