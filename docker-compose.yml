@@ -11,3 +11,6 @@ services:
       context: .
       dockerfile: src/Won.Web/Won.Web/Dockerfile
 
+  won.sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
