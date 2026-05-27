@@ -3,6 +3,8 @@ using Won.Api.Repositories;
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services;
 using Won.Api.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Won.Api.Data;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,36 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<ITripService, TripService>();
+
+// Database configuration
+var connectionName = Environment.GetEnvironmentVariable("DB_CONNECTION_NAME")
+    ?? "DefaultConnection";
+
+var connectionString = builder.Configuration.GetConnectionString(connectionName);
+
+var sqlPassword = Environment.GetEnvironmentVariable("SQL_PASSWORD");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException($"Connection string '{connectionName}' was not found.");
+}
+
+if (string.IsNullOrWhiteSpace(sqlPassword))
+{
+    throw new InvalidOperationException("SQL_PASSWORD environment variable was not found.");
+}
+
+connectionString = connectionString.Replace("{SQL_PASSWORD}", sqlPassword);
+
+builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<WonDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
