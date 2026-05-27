@@ -1,0 +1,26 @@
+﻿@using Web.Models
+
+@if(trip == null)
+{
+    <p>Loading...</p>
+}
+
+<div class="trip-summary">
+    <div class="line"></div>
+    @* <img src="@(string.IsNullOrEmpty(trip.ImageUrl) ? "https://media.istockphoto.com/id/1497396873/photo/ready-for-starting-my-beach-holiday.jpg?s=612x612&w=0&k=20&c=Rfb7IbYAZR1hNTF6KUDYq8CVu9Yr4wRgK2VLZIZyORY=" : trip.ImageUrl)" alt="@trip.Name cover art" class="trip-image" /> *@
+
+    <h2 class="trip-name">@trip.Name</h2>
+    <ul class="trip-info-list">
+        <li class="trip-start-date"><strong>Start Date:</strong> @trip.StartDate.ToString()</li>
+        <li class="trip-end-date"><strong>End Date:</strong> @trip.EndDate.ToString()</li>
+        <li class="trip-location"><strong>Location: </strong> @trip.Location</li>
+        <li class="trip-details"><strong>Details: </strong> @trip.Details</li>
+        <li class="trip-budget"><strong>Budget: </strong> @trip.Budget.ToString()</li>
+        <li class="trip-group-size"><strong>Group Size: </strong> @trip.GroupSize.ToString()</li>
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public Trip trip { get; set; }
+}
