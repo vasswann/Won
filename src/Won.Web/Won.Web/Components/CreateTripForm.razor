@@ -1,7 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
-
-<form @formname="create-trip-form" method="POST" action="/Trips/Create" style="max-width: 600px; padding: 20px;">
-    <AntiforgeryToken />
+﻿<form method="POST" action="https://localhost:7002/Trips/Create" style="max-width: 600px; padding: 20px;">
     <input type="hidden" name="TripId" value="0" />
 
     <div class="box">
