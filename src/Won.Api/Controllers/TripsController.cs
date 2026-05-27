@@ -14,5 +14,13 @@ namespace Won.Api.Controllers
         {
             _tripService = tripService;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTrips()
+        {
+            var trips = await _tripService.GetTripsAsync();
+
+            return Ok(trips);
+        }
     }
 }

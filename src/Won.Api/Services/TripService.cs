@@ -2,6 +2,8 @@
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services.Interfaces;
 using Won.Shared.Dtos;
+using Won.Api.Entities;
+
 namespace Won.Api.Services
 {
     public class TripService : ITripService
@@ -12,6 +14,9 @@ namespace Won.Api.Services
         {
             _tripRepository = tripRepository;
         }
-
+        public async Task<List<Trip>> GetTripsAsync()
+        {
+            return await _tripRepository.GetTripsAsync();
+        }
     }
 }
