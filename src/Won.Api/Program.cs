@@ -1,4 +1,8 @@
 using DotNetEnv;
+using Won.Api.Repositories;
+using Won.Api.Repositories.Interfaces;
+using Won.Api.Services;
+using Won.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Won.Api.Data;
 
@@ -11,6 +15,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
+builder.Services.AddScoped<ITripService, TripService>();
 
 // Database configuration
 var connectionName = Environment.GetEnvironmentVariable("DB_CONNECTION_NAME")
