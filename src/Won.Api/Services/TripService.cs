@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Won.Api.Entities;
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services.Interfaces;
-using Won.Shared.Dtos;
-using Won.Api.Entities;
 
 namespace Won.Api.Services
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using Won.Api.Repositories.Interfaces;
+﻿using Won.Api.Repositories.Interfaces;
 using Won.Api.Entities;
 using Won.Api.Data;
 using Microsoft.EntityFrameworkCore;

@@ -11,6 +11,7 @@ public class WonDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Trip> Trips => Set<Trip>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -43,6 +44,27 @@ public class WonDbContext : DbContext
 
             entity.Property(x => x.CreatedAt)
                 .IsRequired();
+        });
+
+        modelBuilder.Entity<Trip>(entity =>
+        {
+            entity.ToTable("Trips");
+
+            entity.HasKey(x => x.TripId);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(x => x.Location)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(x => x.Details)
+                .HasMaxLength(1000);
+
+            entity.Property(x => x.Budget)
+                .HasColumnType("decimal(18,2)");
         });
     }
 }
