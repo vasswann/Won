@@ -1,26 +1,27 @@
-﻿@using Web.Models
+﻿@using Won.Shared.Models
 
-@if(trip == null)
+@if(ThisTrip == null)
 {
     <p>Loading...</p>
 }
+else
+{
+    <div class="ThisTrip-summary">
+        <div class="line"></div>
 
-<div class="trip-summary">
-    <div class="line"></div>
-    @* <img src="@(string.IsNullOrEmpty(trip.ImageUrl) ? "https://media.istockphoto.com/id/1497396873/photo/ready-for-starting-my-beach-holiday.jpg?s=612x612&w=0&k=20&c=Rfb7IbYAZR1hNTF6KUDYq8CVu9Yr4wRgK2VLZIZyORY=" : trip.ImageUrl)" alt="@trip.Name cover art" class="trip-image" /> *@
-
-    <h2 class="trip-name">@trip.Name</h2>
-    <ul class="trip-info-list">
-        <li class="trip-start-date"><strong>Start Date:</strong> @trip.StartDate.ToString()</li>
-        <li class="trip-end-date"><strong>End Date:</strong> @trip.EndDate.ToString()</li>
-        <li class="trip-location"><strong>Location: </strong> @trip.Location</li>
-        <li class="trip-details"><strong>Details: </strong> @trip.Details</li>
-        <li class="trip-budget"><strong>Budget: </strong> @trip.Budget.ToString()</li>
-        <li class="trip-group-size"><strong>Group Size: </strong> @trip.GroupSize.ToString()</li>
-    </ul>
-</div>
+        <h2 class="ThisTrip-name">@ThisTrip.Name</h2>
+        <ul class="ThisTrip-info-list">
+            <li class="ThisTrip-start-date"><strong>Start Date:</strong> @ThisTrip.StartDate.ToString("dd/MM/yyyy")</li>
+            <li class="ThisTrip-end-date"><strong>End Date:</strong> @ThisTrip.EndDate.ToString("dd/MM/yyyy")</li>
+            <li class="ThisTrip-location"><strong>Location: </strong> @ThisTrip.Location</li>
+            <li class="ThisTrip-details"><strong>Details: </strong> @ThisTrip.Details</li>
+            <li class="ThisTrip-budget"><strong>Budget: </strong> @ThisTrip.Budget.ToString()</li>
+            <li class="ThisTrip-group-size"><strong>Group Size: </strong> @ThisTrip.GroupSize.ToString()</li>
+        </ul>
+    </div>
+}
 
 @code {
     [Parameter]
-    public Trip trip { get; set; }
+    public Trip ThisTrip { get; set; }
 }

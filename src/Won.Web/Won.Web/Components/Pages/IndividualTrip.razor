@@ -1,7 +1,7 @@
 ﻿@page "/trip/{Id:int}"
-@using Web.Models
+@using Won.Shared.Models
 
-<h3>GetSingleTest</h3>
+<h3>Trip Details for trip number: @Id</h3>
 
 
 @if(thisTrip == null)
@@ -10,13 +10,13 @@
 }
 else
 {
-    <GetTripCard trip="thisTrip"/>
+    <GetTripCard ThisTrip="thisTrip"/>
 }
 
 
 @code {
     [Parameter]
-    public int Id { get; set; } = 1;
+    public int Id { get; set; }
 
     private Trip? thisTrip;
 
@@ -24,7 +24,7 @@ else
     {
         new Trip
         {
-            TripID = 1,
+            TripId = 1,
             Name = "Summer Beach Getaway",
             StartDate = new DateTime(2026, 7, 12),
             EndDate = new DateTime(2026, 7, 19),
@@ -35,7 +35,7 @@ else
         },
         new Trip
         {
-            TripID = 2,
+            TripId = 2,
             Name = "Alpine Ski Adventure",
             StartDate = new DateTime(2026, 12, 5),
             EndDate = new DateTime(2026, 12, 12),
@@ -46,7 +46,7 @@ else
         },
         new Trip
         {
-            TripID = 3,
+            TripId = 3,
             Name = "Tokyo Explorer",
             StartDate = new DateTime(2027, 4, 3),
             EndDate = new DateTime(2027, 4, 15),
@@ -59,6 +59,6 @@ else
 
     protected override void OnInitialized()
     {
-        thisTrip = MyTrips.FirstOrDefault(Trip => Trip.TripID == Id);
+        thisTrip = MyTrips.FirstOrDefault(Trip => Trip.TripId == Id);
     }
 }
