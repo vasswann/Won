@@ -12,5 +12,6 @@ namespace Won.Api.Entities
         public string Details { get; set; }  = string.Empty;
         public decimal Budget { get; set; }
         public int GroupSize { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
