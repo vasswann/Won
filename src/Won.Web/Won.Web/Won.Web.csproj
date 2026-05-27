@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Won.Api\Won.Api.csproj" />
     <ProjectReference Include="..\..\Won.Shared\Won.Shared.csproj" />
     <ProjectReference Include="..\Won.Web.Client\Won.Web.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.24" />
