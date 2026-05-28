@@ -11,7 +11,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\TripsController.cs" />
+    <Compile Remove="Data\WonDbContext.cs" />
+    <Compile Remove="Migrations\20260527104259_CreateUsersTable.cs" />
+    <Compile Remove="Migrations\20260527104259_CreateUsersTable.Designer.cs" />
+    <Compile Remove="Migrations\WonDbContextModelSnapshot.cs" />
+    <Compile Remove="Repositories\Interfaces\ITripRepository.cs" />
+    <Compile Remove="Repositories\TripRepository.cs" />
+    <Compile Remove="Services\Interfaces\ITripService.cs" />
+    <Compile Remove="Services\TripService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.27" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.27">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,6 +42,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Won.Shared\Won.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Repositories\Interfaces\" />
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>
