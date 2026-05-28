@@ -13,6 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Won.Api/Won.Api.csproj", "src/Won.Api/"]
+COPY ["src/Won.Shared/Won.Shared.csproj", "src/Won.Shared/"]
 RUN dotnet restore "./src/Won.Api/Won.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Won.Api"
