@@ -17,5 +17,9 @@ namespace Won.Api.Repositories
         {
             return await _context.Trips.ToListAsync();
         }
+        public async Task<Trip?> GetTripByIdAsync(int id)
+        {
+            return await _context.Trips.FindAsync(id);
+        }
     }
 }
