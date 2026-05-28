@@ -1,5 +1,4 @@
-﻿using Won.Shared.Dtos;
-using Won.Api.Entities;
+﻿using Won.Api.Entities;
 
 namespace Won.Api.Services.Interfaces
 {
