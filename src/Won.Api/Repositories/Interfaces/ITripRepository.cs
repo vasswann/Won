@@ -6,5 +6,6 @@ namespace Won.Api.Repositories.Interfaces
     {
         Task<List<Trip>> GetTripsAsync();
         Task<Trip?> GetTripByIdAsync(int id);
+        Task<Trip> CreateTripAsync(Trip trip);
     }
 }
