@@ -5,6 +5,7 @@ using Won.Api.Services;
 using Won.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Won.Api.Data;
+using Won.Api.Middleware;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,8 @@ connectionString = connectionString.Replace("{SQL_PASSWORD}", sqlPassword);
 builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
