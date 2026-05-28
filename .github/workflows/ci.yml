@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-and-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore Won.sln
+
+      - name: Build solution
+        run: dotnet build Won.sln --configuration Release --no-restore -warnaserror
+
+      - name: Run tests
+        run: dotnet test Won.sln --configuration Release --no-build --verbosity normal
+
+      - name: Build Docker containers
+        run: docker compose build
