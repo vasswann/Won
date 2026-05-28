@@ -1,10 +1,10 @@
 using DotNetEnv;
-//using Won.Api.Data;
+using Won.Api.Data;
 using Microsoft.AspNetCore.Identity;
-//using Won.Api.Repositories;
-//using Won.Api.Repositories.Interfaces;
-//using Won.Api.Services;
-//using Won.Api.Services.Interfaces;
+using Won.Api.Repositories;
+using Won.Api.Repositories.Interfaces;
+using Won.Api.Services;
+using Won.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Won.Api.Entities;
 using Won.Api.Services;
@@ -55,8 +55,8 @@ builder.Services.AddSwaggerGen(options =>
 
 //adding AuthService
 builder.Services.AddScoped<AuthService>();
-//builder.Services.AddScoped<ITripRepository, TripRepository>();
-//builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
+builder.Services.AddScoped<ITripService, TripService>();
 
 //Dependency Injection for AuthService to create a passwordhash
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -112,14 +112,14 @@ if (string.IsNullOrWhiteSpace(sqlPassword))
 
 connectionString = connectionString.Replace("{SQL_PASSWORD}", sqlPassword);
 
-//builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    //var dbContext = scope.ServiceProvider.GetRequiredService<WonDbContext>();
-    //dbContext.Database.Migrate();
+    var dbContext = scope.ServiceProvider.GetRequiredService<WonDbContext>();
+    dbContext.Database.Migrate();
 }
 
 // Configure the HTTP request pipeline.
