@@ -6,5 +6,6 @@ namespace Won.Api.Services.Interfaces
     public interface ITripService
     {
         Task<List<Trip>> GetTripsAsync();
+        Task<Trip?> GetTripByIdAsync(int id);
     }
 }
