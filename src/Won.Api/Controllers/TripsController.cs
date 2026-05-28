@@ -21,5 +21,17 @@ namespace Won.Api.Controllers
 
             return Ok(trips);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTripById(int id)
+        {
+            var trip = await _tripService.GetTripByIdAsync(id);
+
+            if (trip == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(trip);
+        }
     }
 }
