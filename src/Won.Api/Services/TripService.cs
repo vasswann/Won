@@ -36,5 +36,24 @@ namespace Won.Api.Services
 
             return await _tripRepository.CreateTripAsync(trip);
         }
+        public async Task<Trip?> UpdateTripAsync(int id, UpdateTripDto updatedTripData)
+        {
+            var trip = await _tripRepository.GetTripByIdAsync(id);
+
+            if (trip == null)
+            {
+                return null;
+            }
+
+            trip.Name = updatedTripData.Name;
+            trip.StartDate = updatedTripData.StartDate;
+            trip.EndDate = updatedTripData.EndDate;
+            trip.Location = updatedTripData.Location;
+            trip.Details = updatedTripData.Details;
+            trip.Budget = updatedTripData.Budget;
+            trip.GroupSize = updatedTripData.GroupSize;
+
+            return await _tripRepository.UpdateTripAsync(trip);
+        }
     }
 }

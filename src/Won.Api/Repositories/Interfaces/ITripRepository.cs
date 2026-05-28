@@ -1,4 +1,5 @@
 ﻿using Won.Api.Entities;
+using Won.Shared.Dtos;
 
 namespace Won.Api.Repositories.Interfaces
 {
@@ -7,5 +8,6 @@ namespace Won.Api.Repositories.Interfaces
         Task<List<Trip>> GetTripsAsync();
         Task<Trip?> GetTripByIdAsync(int id);
         Task<Trip> CreateTripAsync(Trip trip);
+        Task<Trip?> UpdateTripAsync(Trip trip);
     }
 }

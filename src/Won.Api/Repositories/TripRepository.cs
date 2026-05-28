@@ -29,5 +29,11 @@ namespace Won.Api.Repositories
 
             return trip;
         }
+        public async Task<Trip?> UpdateTripAsync(Trip trip)
+        {
+            await _context.SaveChangesAsync();
+
+            return trip;
+        }
     }
 }

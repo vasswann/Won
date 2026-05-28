@@ -41,5 +41,17 @@ namespace Won.Api.Controllers
 
             return Ok(trip);
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateTrip(int id, UpdateTripDto updatedTripData)
+        {
+            var updatedTrip = await _tripService.UpdateTripAsync(id, updatedTripData);
+
+            if (updatedTrip == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedTrip);
+        }
     }
 }
