@@ -55,5 +55,9 @@ namespace Won.Api.Services
 
             return await _tripRepository.UpdateTripAsync(trip);
         }
+        public async Task<bool> DeleteTripAsync(int id)
+        {
+            return await _tripRepository.DeleteTripAsync(id);
+        }
     }
 }

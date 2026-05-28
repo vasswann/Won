@@ -9,5 +9,6 @@ namespace Won.Api.Services.Interfaces
         Task<Trip?> GetTripByIdAsync(int id);
         Task<Trip> CreateTripAsync(CreateTripDto tripData);
         Task<Trip?> UpdateTripAsync(int id, UpdateTripDto updatedTripData);
+        Task<bool> DeleteTripAsync(int id);
     }
 }

@@ -35,5 +35,20 @@ namespace Won.Api.Repositories
 
             return trip;
         }
+        public async Task<bool> DeleteTripAsync(int id)
+        {
+            var trip = await _context.Trips.FindAsync(id);
+
+            if (trip == null)
+            {
+                return false;
+            }
+
+            _context.Trips.Remove(trip);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

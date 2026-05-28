@@ -53,5 +53,17 @@ namespace Won.Api.Controllers
 
             return Ok(updatedTrip);
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTrip(int id)
+        {
+            var deleted = await _tripService.DeleteTripAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }
