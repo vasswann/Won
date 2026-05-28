@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Won.Api.Services.Interfaces;
+using Won.Shared.Dtos;
 
 namespace Won.Api.Controllers
 {
@@ -30,6 +31,13 @@ namespace Won.Api.Controllers
             {
                 return NotFound();
             }
+
+            return Ok(trip);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateTrip(CreateTripDto tripData)
+        {
+            var trip = await _tripService.CreateTripAsync(tripData);
 
             return Ok(trip);
         }
