@@ -14,6 +14,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Won.Web/Won.Web/Won.Web.csproj", "src/Won.Web/Won.Web/"]
 COPY ["src/Won.Web/Won.Web.Client/Won.Web.Client.csproj", "src/Won.Web/Won.Web.Client/"]
+COPY ["src/Won.Shared/Won.Shared.csproj", "src/Won.Shared/"]
 RUN dotnet restore "./src/Won.Web/Won.Web/Won.Web.csproj"
 COPY . .
 WORKDIR "/src/src/Won.Web/Won.Web"
