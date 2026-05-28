@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Won.Shared.Models
+﻿namespace Won.Shared.Models
 {
     public class Trip
     {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Won.Api.Entities
+﻿namespace Won.Api.Entities
 {
     public class Trip
     {
