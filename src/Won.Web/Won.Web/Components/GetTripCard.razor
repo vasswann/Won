@@ -15,13 +15,13 @@ else
             <li class="ThisTrip-end-date"><strong>End Date:</strong> @ThisTrip.EndDate.ToString("dd/MM/yyyy")</li>
             <li class="ThisTrip-location"><strong>Location: </strong> @ThisTrip.Location</li>
             <li class="ThisTrip-details"><strong>Details: </strong> @ThisTrip.Details</li>
-            <li class="ThisTrip-budget"><strong>Budget: </strong> £@ThisTrip.Budget.ToString()</li>
-            <li class="ThisTrip-group-size"><strong>Group Size: </strong> @ThisTrip.GroupSize.ToString()</li>
+            <li class="ThisTrip-budget"><strong>Budget: </strong> £@ThisTrip.Budget</li>
+            <li class="ThisTrip-group-size"><strong>Group Size: </strong> @ThisTrip.GroupSize</li>
         </ul>
     </div>
 }
 
 @code {
     [Parameter]
-    public Trip ThisTrip { get; set; }
+    public Trip? ThisTrip { get; set; }
 }
