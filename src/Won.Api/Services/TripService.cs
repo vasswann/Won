@@ -2,6 +2,7 @@
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services.Interfaces;
 using Won.Shared.Dtos;
+using Won.Api.Exceptions;
 
 namespace Won.Api.Services
 {
@@ -19,10 +20,19 @@ namespace Won.Api.Services
         }
         public async Task<Trip?> GetTripByIdAsync(int id)
         {
-            return await _tripRepository.GetTripByIdAsync(id);
+            var trip = await _tripRepository.GetTripByIdAsync(id);
+            if(trip == null)
+            {
+                throw new NotFoundException($"Trip with ID {id} was not found.");
+            }
+            return trip;
         }
         public async Task<Trip> CreateTripAsync(CreateTripDto tripData)
         {
+            if (tripData.EndDate < tripData.StartDate)
+            {
+                throw new BadRequestException("End date cannot be before start date.");
+            }
             var trip = new Trip
             {
                 Name = tripData.Name,
@@ -42,7 +52,7 @@ namespace Won.Api.Services
 
             if (trip == null)
             {
-                return null;
+                throw new NotFoundException($"Trip with ID {id} was not found.");
             }
 
             trip.Name = updatedTripData.Name;
@@ -57,7 +67,13 @@ namespace Won.Api.Services
         }
         public async Task<bool> DeleteTripAsync(int id)
         {
-            return await _tripRepository.DeleteTripAsync(id);
+            var deleted = await _tripRepository.DeleteTripAsync(id);
+            if (!deleted)
+            {
+                throw new NotFoundException($"Trip with ID {id} was not found.");
+
+            }
+            return deleted;
         }
     }
 }
