@@ -17,5 +17,38 @@ namespace Won.Api.Repositories
         {
             return await _context.Trips.ToListAsync();
         }
+        public async Task<Trip?> GetTripByIdAsync(int id)
+        {
+            return await _context.Trips.FindAsync(id);
+        }
+        public async Task<Trip> CreateTripAsync(Trip trip)
+        {
+            _context.Trips.Add(trip);
+
+            await _context.SaveChangesAsync();
+
+            return trip;
+        }
+        public async Task<Trip?> UpdateTripAsync(Trip trip)
+        {
+            await _context.SaveChangesAsync();
+
+            return trip;
+        }
+        public async Task<bool> DeleteTripAsync(int id)
+        {
+            var trip = await _context.Trips.FindAsync(id);
+
+            if (trip == null)
+            {
+                return false;
+            }
+
+            _context.Trips.Remove(trip);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
