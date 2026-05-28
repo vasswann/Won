@@ -1,0 +1,43 @@
+﻿@page "/api/register"
+@rendermode InteractiveAuto
+
+<PageTitle>Register</PageTitle>
+
+<div class="container">
+    <h2>Register an account</h2>
+
+    <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+            <input class="input" type="text" @bind="username" placeholder="e.g Alex Smith">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+            <input class="input" type="email" @bind="email" placeholder="e.g. alexsmith@gmail.com">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" type="password" @bind="password" placeholder="Password" />
+        </div>
+    </div>
+
+    <div class="control">
+        <button class="button is-primary" @onclick="" >Register</button>
+    </div>
+</div>
+
+
+@code {
+    public string email = "";
+    public string username = "";
+    public string password = "";
+    public string[] errors = [];
+
+}
+

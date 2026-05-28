@@ -1,0 +1,43 @@
+﻿@page "/api/login"
+@rendermode InteractiveAuto
+
+<h2>Login</h2>
+
+<div class="container">
+    <h2>Login</h2>
+
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+            <input class="input" type="email" @bind="email" placeholder="e.g. alexsmith@gmail.com">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" type="password" @bind="password" placeholder="Password" />
+        </div>
+    </div>
+
+    <div class="container button-container">
+        <div class="control">
+            <button class="button is-primary" @onclick="methodTBD">Register</button>
+        </div>
+        
+        <div class="control">
+            <button class="button is-primary" href="/" >Cancel</button>
+        </div>
+
+    </div>
+
+</div>
+
+
+@code {
+    public string email = "";
+    public string password = "";
+    public string[] errors = [];
+
+}
+
