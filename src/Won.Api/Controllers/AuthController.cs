@@ -3,6 +3,8 @@ using Won.Api.Entities;
 using Won.Api.Services;
 using Won.Shared.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Won.Api.Data;
 
 namespace Won.Api.Controllers
 {
@@ -11,10 +13,12 @@ namespace Won.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
+        private readonly WonDbContext _db;
 
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService, WonDbContext db)
         {
             _authService = authService;
+            _db = db;
         }
 
         //hardcoded test to see if middleware enforces authentication
@@ -26,20 +30,18 @@ namespace Won.Api.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequestDto request)
+        public async Task<IActionResult> Login(LoginRequestDto request)
         {
-            //hardcoding fake user for test
-            var user = new User
-            {
-                Id = 1,
-                Email = "test@test.com",
+            //retrieve user from database by email
+            //Checks: for each user in DB userTable, check if u.Email = request.Email from FE
+            var user = await _db.Users
+                .FirstOrDefaultAsync(
+                u => u.Email == request.Email);
 
-                PasswordHash =
-                _authService.HashPassword(
-                    new User(),
-                    "password123"
-                    )
-            };
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
             bool valid =
                 _authService.VerifyPassword(
