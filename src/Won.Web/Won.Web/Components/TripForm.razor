@@ -1,9 +1,10 @@
 ﻿@using Won.Shared.Models
 @using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
 @inject HttpClient http
 @inject NavigationManager Navigation
 
-<form @onsubmit="SubmitTrip" style="max-width: 600px; padding: 20px;">
+<EditForm Model="MyTrip" OnValidSubmit="SubmitTrip" style="max-width: 600px; padding: 20px;">
     <div class="box">
         <div class="field">
             <label class="label">Trip Name</label>
@@ -89,7 +90,7 @@
             <a href="/trips" class="button is-light">Cancel</a>
         </div>
     </div>
-</form>
+</EditForm>
 @code {
     [Parameter]
     public Trip MyTrip { get; set; } = new Trip();
@@ -97,8 +98,7 @@
     {
         try
         {
-            int Id = MyTrip.TripId;
-            var response = await http.PostAsJsonAsync($"api/{Id}", MyTrip);
+            var response = await http.PostAsJsonAsync("api/Trips", MyTrip);
 
             if (response.IsSuccessStatusCode)
             {
