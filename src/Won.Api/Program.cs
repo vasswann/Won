@@ -1,6 +1,11 @@
 using DotNetEnv;
+using Won.Api.Repositories;
+using Won.Api.Repositories.Interfaces;
+using Won.Api.Services;
+using Won.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Won.Api.Data;
+using Won.Api.Middleware;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +16,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
+builder.Services.AddScoped<ITripService, TripService>();
 
 // Database configuration
 var connectionName = Environment.GetEnvironmentVariable("DB_CONNECTION_NAME")
@@ -35,6 +42,8 @@ connectionString = connectionString.Replace("{SQL_PASSWORD}", sqlPassword);
 builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {

@@ -1,0 +1,20 @@
+root = true
+
+[*.cs]
+
+# Remove unused usings
+dotnet_diagnostic.IDE0005.severity = error
+
+# Nullable warnings
+dotnet_diagnostic.CS8618.severity = warning
+
+# Prefer var
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+
+# Sort usings
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# Require braces
+csharp_prefer_braces = true:suggestion
