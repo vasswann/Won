@@ -1,6 +1,7 @@
 ﻿using Moq;
-using NUnit.Framework;
+
 using Won.Api.Entities;
+using Won.Api.Exceptions;
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services;
 using Won.Shared.Dtos;
@@ -126,20 +127,20 @@ namespace Won.Api.Tests.ServiceTests
         }
 
         [Test]
-        public async Task UpdateTripAsync_ShouldReturnNull_WhenTripDoesNotExist()
+        public void UpdateTripAsync_ShouldThrowNotFoundException_WhenTripDoesNotExist()
         {
             // Arrange
             var updatedTripData = new UpdateTripDto();
 
             _tripRepositoryMock
-                .Setup(repository => repository.GetTripByIdAsync(99))
+                .Setup(repo => repo.GetTripByIdAsync(99))
                 .ReturnsAsync((Trip?)null);
 
-            // Act
-            var actual = await _tripService.UpdateTripAsync(99, updatedTripData);
-
-            // Assert
-            Assert.That(actual, Is.Null);
+            // Act + Assert
+            Assert.ThrowsAsync<NotFoundException>(async () =>
+            {
+                await _tripService.UpdateTripAsync(99, updatedTripData);
+            });
         }
 
         [Test]
