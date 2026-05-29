@@ -1,64 +1,66 @@
-﻿@page "/trips/{Id:int}"
-@using Won.Shared.Models
+﻿    @page "/trips/{Id:int}"
+    @rendermode InteractiveServer
+    @using Won.Shared.Models
 
-<h3>Trip Details for trip number: @Id</h3>
-
-
-@if(MyTrip == null)
-{
-    <p>No trip exists with the ID of @Id</p>
-}
-else
-{
-    <GetTripCard ThisTrip="MyTrip"/>
-}
+    <h3>Trip Details for trip number: @Id</h3>
 
 
-@code {
-    [Parameter]
-    public int Id { get; set; }
-
-    private Trip? MyTrip;
-
-    public List<Trip> TestTrips = new List<Trip>()
+    @if(MyTrip == null)
     {
-        new Trip
-        {
-            TripId = 1,
-            Name = "Summer Beach Getaway",
-            StartDate = new DateTime(2026, 7, 12),
-            EndDate = new DateTime(2026, 7, 19),
-            Location = "Ibiza, Spain",
-            Details = "Staying at a beachside resort with all-inclusive food and drinks.",
-            Budget = 1500,
-            GroupSize = 4
-        },
-        new Trip
-        {
-            TripId = 2,
-            Name = "Alpine Ski Adventure",
-            StartDate = new DateTime(2026, 12, 5),
-            EndDate = new DateTime(2026, 12, 12),
-            Location = "Chamonix, France",
-            Details = "Ski pass included. Cabin rental with a hot tub.",
-            Budget = 2200,
-            GroupSize = 6
-        },
-        new Trip
-        {
-            TripId = 3,
-            Name = "Tokyo Explorer",
-            StartDate = new DateTime(2027, 4, 3),
-            EndDate = new DateTime(2027, 4, 15),
-            Location = "Tokyo, Japan",
-            Details = "Sightseeing during the cherry blossom season. Budget includes flights.",
-            Budget = 3500,
-            GroupSize = 2
-        }
-    };
-
-    protected override void OnInitialized()
-    {
-        MyTrip = TestTrips.FirstOrDefault(Trip => Trip.TripId == Id);
+        <p>No trip exists with the ID of @Id</p>
     }
-}
+    else
+    {
+        <GetTripCard ThisTrip="MyTrip"/>
+        <EditTripButton />
+    }
+
+
+    @code {
+        [Parameter]
+        public int Id { get; set; }
+
+        private Trip? MyTrip;
+
+        public List<Trip> TestTrips = new List<Trip>()
+        {
+            new Trip
+            {
+                TripId = 1,
+                Name = "Summer Beach Getaway",
+                StartDate = new DateTime(2026, 7, 12),
+                EndDate = new DateTime(2026, 7, 19),
+                Location = "Ibiza, Spain",
+                Details = "Staying at a beachside resort with all-inclusive food and drinks.",
+                Budget = 1500,
+                GroupSize = 4
+            },
+            new Trip
+            {
+                TripId = 2,
+                Name = "Alpine Ski Adventure",
+                StartDate = new DateTime(2026, 12, 5),
+                EndDate = new DateTime(2026, 12, 12),
+                Location = "Chamonix, France",
+                Details = "Ski pass included. Cabin rental with a hot tub.",
+                Budget = 2200,
+                GroupSize = 6
+            },
+            new Trip
+            {
+                TripId = 3,
+                Name = "Tokyo Explorer",
+                StartDate = new DateTime(2027, 4, 3),
+                EndDate = new DateTime(2027, 4, 15),
+                Location = "Tokyo, Japan",
+                Details = "Sightseeing during the cherry blossom season. Budget includes flights.",
+                Budget = 3500,
+                GroupSize = 2
+            }
+        };
+
+        protected override void OnInitialized()
+        {
+            MyTrip = TestTrips.FirstOrDefault(Trip => Trip.TripId == Id);
+        }
+    }

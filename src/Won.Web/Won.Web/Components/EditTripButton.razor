@@ -9,7 +9,11 @@
 
     private void GoToEdit()
     {
-        if (ThisTrip is null) return;
+        if (ThisTrip is null)
+        {
+            Console.WriteLine("ThisTrip is null");
+            return;
+        }
         Navigation.NavigateTo($"/trips/update/{ThisTrip.TripId}");
     }
 }
