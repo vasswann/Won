@@ -2,7 +2,6 @@
 using Won.Api.Services.Interfaces;
 using Won.Shared.Dtos;
 using Won.Shared.Common;
-using Won.Api.Entities;
 
 namespace Won.Api.Controllers
 {
@@ -22,7 +21,7 @@ namespace Won.Api.Controllers
         {
             var trips = await _tripService.GetTripsAsync();
 
-            return Ok(new ApiResponse<List<Trip>>
+            return Ok(new ApiResponse<List<TripDto>>
             {
                 Success = true,
                 StatusCode = 200,
@@ -38,10 +37,15 @@ namespace Won.Api.Controllers
 
             if (trip == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Trip not found."
+                });
             }
 
-            return Ok(new ApiResponse<Trip>
+            return Ok(new ApiResponse<TripDto>
             {
                 Success = true,
                 StatusCode = 200,
@@ -55,14 +59,16 @@ namespace Won.Api.Controllers
         {
             var trip = await _tripService.CreateTripAsync(tripData);
 
-            return Created("", new ApiResponse<Trip>
-            {
-                Success = true,
-                StatusCode = 201,
-                Message = "Trip created successfully.",
-                Data = trip,
-                Errors = null
-            });
+            return CreatedAtAction(
+                nameof(GetTripById),
+                new { id = trip.TripId },
+                new ApiResponse<TripDto>
+                {
+                    Success = true,
+                    StatusCode = 201,
+                    Message = "Trip created successfully.",
+                    Data = trip
+                });
         }
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateTrip(int id, UpdateTripDto updatedTripData)
@@ -71,10 +77,15 @@ namespace Won.Api.Controllers
 
             if (updatedTrip == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Trip not found."
+                });
             }
 
-            return Ok(new ApiResponse<Trip>
+            return Ok(new ApiResponse<TripDto>
             {
                 Success = true,
                 StatusCode = 200,
@@ -90,7 +101,12 @@ namespace Won.Api.Controllers
 
             if (!deleted)
             {
-                return NotFound();
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    StatusCode = 404,
+                    Message = "Trip not found."
+                });
             }
 
             return Ok(new ApiResponse<object>
