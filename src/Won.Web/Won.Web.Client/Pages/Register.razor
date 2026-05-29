@@ -1,0 +1,89 @@
+﻿@page "/register"
+@rendermode InteractiveAuto
+
+<h2 class="h4 fw-bold text-center mb-2">Create your account</h2>
+<p class="text-muted text-center mb-4">
+    Start planning and managing your trips.
+</p>
+
+<EditForm Model="_model" OnValidSubmit="HandleRegisterAsync">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText class="form-control form-control-lg"
+                   placeholder="Your name"
+                   @bind-Value="_model.Name" />
+        <ValidationMessage For="@(() => _model.Name)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email address</label>
+        <InputText class="form-control form-control-lg"
+                   type="email"
+                   placeholder="you@example.com"
+                   @bind-Value="_model.Email" />
+        <ValidationMessage For="@(() => _model.Email)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <InputText class="form-control form-control-lg"
+                   type="password"
+                   placeholder="Create a password"
+                   @bind-Value="_model.Password" />
+        <ValidationMessage For="@(() => _model.Password)" />
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label">Confirm password</label>
+        <InputText class="form-control form-control-lg"
+                   type="password"
+                   placeholder="Repeat your password"
+                   @bind-Value="_model.ConfirmPassword" />
+        <ValidationMessage For="@(() => _model.ConfirmPassword)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg w-100">
+        Create account
+    </button>
+
+    <p class="text-center text-muted mt-4 mb-0">
+        Already have an account?
+        <NavLink href="/login" class="auth-link fw-semibold">
+            Login
+        </NavLink>
+    </p>
+</EditForm>
+
+@code {
+    private readonly RegisterModel _model = new();
+
+    private async Task HandleRegisterAsync()
+    {
+        // TODO:
+        // 1. Call API register endpoint
+        // 2. Optionally save JWT token
+        // 3. Navigate to /dashboard or /login
+
+        await Task.CompletedTask;
+    }
+
+    private sealed class RegisterModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.MinLength(6)]
+        public string Password { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+}

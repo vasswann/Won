@@ -1,4 +1,4 @@
-﻿@page "/trips/{Id:int}"
+﻿@* @page "/trips/{Id:int}"
 @using Won.Shared.Models
 
 <h3>Trip Details for trip number: @Id</h3>
@@ -61,4 +61,4 @@ else
     {
         MyTrip = TestTrips.FirstOrDefault(Trip => Trip.TripId == Id);
     }
-}
+} *@

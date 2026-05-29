@@ -1,0 +1,62 @@
+﻿<div class="has-text-centered">
+    <div class="auth-logo">W</div>
+    <h1 class="title is-3 auth-title">Login to your account</h1>
+</div>
+
+<EditForm Model="_model" OnValidSubmit="HandleLoginAsync">
+    <DataAnnotationsValidator />
+
+    <div class="field mb-5">
+        <label class="label">Email</label>
+        <div class="control">
+            <InputText class="input is-medium"
+                       type="email"
+                       placeholder="Enter your email"
+                       @bind-Value="_model.Email" />
+        </div>
+        <ValidationMessage For="@(() => _model.Email)" />
+    </div>
+
+    <div class="field mb-5">
+        <label class="label">Password</label>
+        <div class="control">
+            <InputText class="input is-medium"
+                       type="password"
+                       placeholder="Enter your password"
+                       @bind-Value="_model.Password" />
+        </div>
+        <ValidationMessage For="@(() => _model.Password)" />
+    </div>
+
+    <button type="submit" class="button is-fullwidth auth-submit">
+        Login
+    </button>
+
+    <p class="has-text-centered has-text-grey mt-5 mb-0">
+        Don't have an account?
+        <NavLink href="/register" class="auth-link has-text-weight-semibold">
+            Create one
+        </NavLink>
+    </p>
+</EditForm>
+
+@code {
+    private readonly LoginModel _model = new();
+
+    private async Task HandleLoginAsync()
+    {
+        await Task.CompletedTask;
+    }
+
+    private sealed class LoginModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Password { get; set; } = string.Empty;
+
+        public bool RememberMe { get; set; }
+    }
+}
