@@ -1,17 +1,16 @@
 using DotNetEnv;
-using Won.Api.Data;
-using Microsoft.AspNetCore.Identity;
 using Won.Api.Repositories;
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services;
 using Won.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Won.Api.Data;
+using Won.Api.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Won.Api.Entities;
-using Won.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.OpenApi.Models;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -115,6 +114,8 @@ connectionString = connectionString.Replace("{SQL_PASSWORD}", sqlPassword);
 builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
