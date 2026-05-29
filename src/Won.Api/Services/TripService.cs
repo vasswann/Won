@@ -22,7 +22,10 @@ namespace Won.Api.Services
                 Name = trip.Name,
                 StartDate = trip.StartDate,
                 EndDate = trip.EndDate,
-                Location = trip.Location
+                Location = trip.Location,
+                Details = trip.Details,
+                Budget = trip.Budget,
+                GroupSize = trip.GroupSize
             };
         }
 
