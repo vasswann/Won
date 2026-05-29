@@ -1,5 +1,118 @@
-﻿<h3>TripForm</h3>
+﻿@using Won.Shared.Dtos
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@inject NavigationManager Navigation
 
+<EditForm Model="MyTrip" OnValidSubmit="SubmitTrip" style="max-width: 600px; padding: 20px;">
+    <div class="box">
+        <div class="field">
+            <label class="label">Trip Name</label>
+            <div class="field">
+                <input class="name" type="text" @bind="MyTrip.Name" placeholder="Summer Vacation 2026" />
+            </div>
+            <p class="help is-danger">Trip Name Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Start Date</label>
+            <div class="control has-icons-right">
+                <input class="start-date" type="date" @bind="MyTrip.StartDate" placeholder="DD/MM/YYYY" />
+                <span class="icon is-small is-right">
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+            </div>
+            <p class="help is-danger">Start Date Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">End Date</label>
+            <div class="control has-icons-right">
+                <input class="end-date" type="date" @bind="MyTrip.EndDate" placeholder="DD/MM/YYYY" />
+                <span class="icon is-small is-right">
+                    <i class="fas fa-calendar-check"></i>
+                </span>
+            </div>
+            <p class="help is-danger">End Date Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Location</label>
+            <div class="field">
+                <input class="location" type="text" @bind="MyTrip.Location" placeholder="Paris, France" />
+            </div>
+            <p class="help is-danger">Location Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Details</label>
+            <div class="control">
+                <div class="field">
+                    <textarea class="details" @bind="MyTrip.Details" placeholder="Add itinerary notes, packing lists, or hotel details..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Budget</label>
+            <div class="field">
+                <input class="budget" type="number" @bind="MyTrip.Budget" min="0" placeholder="1500" />
+            </div>
+            <p class="help is-danger">Budget Is Required</p>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="field">
+            <label class="label">Group Size</label>
+            <div class="field">
+                <input class="group-size" type="number" @bind="MyTrip.GroupSize" min="1" placeholder="4" />
+            </div>
+            <p class="help is-danger">Group Size Is Required</p>
+        </div>
+    </div>
+
+    <div class="field is-grouped is-grouped-right">
+        <div class="control">
+            <button type="submit" class="button is-link">Save Trip</button>
+        </div>
+        <div class="control">
+            <a href="/trips" class="button is-light">Cancel</a>
+        </div>
+    </div>
+</EditForm>
 @code {
+    private CreateTripDto MyTrip = new CreateTripDto();
+    private async Task SubmitTrip()
+    {
+        // try
+        // {
+        //     Console.WriteLine(http.BaseAddress);
+        //     var response = await http.PostAsJsonAsync("api/trips", MyTrip);
 
+        //     if (response.IsSuccessStatusCode)
+        //     {
+        //         Navigation.NavigateTo("/trips");
+        //     }
+        //     else
+        //     {
+        //         Console.WriteLine($"Server error: {response.StatusCode}");
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine($"Network error: {ex.Message}");
+        // }
+
+        Navigation.NavigateTo("/trips");
+    }
 }
