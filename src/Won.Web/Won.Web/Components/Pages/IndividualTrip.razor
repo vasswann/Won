@@ -1,5 +1,7 @@
 ﻿@page "/trips/{Id:int}"
 @using Won.Shared.Models
+@inject HttpClient Http
+@rendermode InteractiveServer
 
 <h3>Trip Details for trip number: @Id</h3>
 
@@ -58,8 +60,8 @@ else
         }
     };
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        MyTrip = TestTrips.FirstOrDefault(Trip => Trip.TripId == Id);
+        MyTrip = await Http.GetFromJsonAsync<Trip>($"api/trips/{Id}");
     }
 }
