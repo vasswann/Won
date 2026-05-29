@@ -1,0 +1,15 @@
+﻿@using Won.Shared.Models
+@inject NavigationManager Navigation
+
+<button @onclick="GoToEdit">Edit Trip</button>
+
+@code {
+    [Parameter]
+    public Trip ThisTrip { get; set; }
+
+    private void GoToEdit()
+    {
+        if (ThisTrip is null) return;
+        Navigation.NavigateTo($"/trips/update/{ThisTrip.TripId}");
+    }
+}
