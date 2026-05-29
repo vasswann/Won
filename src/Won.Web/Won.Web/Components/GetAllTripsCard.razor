@@ -1,0 +1,20 @@
+﻿@using Won.Shared.Models
+
+@if (Trips is null || !Trips.Any())
+{
+    <p>No trips available.</p>
+}
+else
+{
+    <div class="trips-container">
+        @foreach (var trip in Trips)
+        {
+            <GetTripCard ThisTrip="trip" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<Trip>? Trips { get; set; }
+}
