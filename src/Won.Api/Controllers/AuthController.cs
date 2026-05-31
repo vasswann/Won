@@ -20,8 +20,8 @@ namespace Won.Api.Controllers
             _authService = authService;
             _db = db;
         }
-
-        //hardcoded test to see if middleware enforces authentication
+        
+        //Test endpoint protected by JWT authentication
         [Authorize]
         [HttpGet("secret")]
         public IActionResult Secret()
@@ -66,5 +66,52 @@ namespace Won.Api.Controllers
                 });
         }
 
+        //Register endpoint
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(
+            RegisterRequestDto request)
+        {
+            //Check Email - existingUser looks through all dbUsers and finds the first one with an email which matches the requestEmail
+            var existingUser =
+                await _db.Users
+                .FirstOrDefaultAsync(
+                    u => u.Email == request.Email);
+
+            //if the user already exists(is registered), throw BadRequest
+            if(existingUser != null)
+            {
+                return BadRequest(
+                    "Email already exists");
+            }
+
+            else if(string.IsNullOrWhiteSpace(request.Email) || 
+                string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest("Email and password are required");
+            }
+
+            //Create new user
+            var user = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            //Hash their password with method in authService
+            user.PasswordHash =
+                _authService.HashPassword(
+                    user,
+                    request.Password);
+
+            //Save the new user to the db
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync();
+
+            //Return success
+            return Ok("User registered successfully!");
+            
+        }
     }
 }
