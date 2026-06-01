@@ -3,7 +3,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
+using Won.Api.Data;
 using Won.Api.Entities;
+using Won.Shared.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Won.Api.Services
 {
@@ -81,6 +85,81 @@ namespace Won.Api.Services
             return new JwtSecurityTokenHandler().WriteToken(wonUserToken);
             //this uses a built-in to return the generated token as a string
             //this uses a built-in to return the generated token as a string
+        }
+
+        public async Task<string?> LoginAsync(
+            LoginRequestDto request,
+            WonDbContext db)
+        {
+            var user = await db.Users
+               .FirstOrDefaultAsync(
+               u => u.Email == request.Email);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            bool valid =
+                VerifyPassword(
+                    user,
+                    request.Password
+                    );
+            //checks if entered password matches the stored hash ^
+
+            //if not valid, return unauthorized, if valid, return token:
+            if (!valid)
+            {
+                return null;
+            }
+
+            //return token:
+            return GenerateToken(user);
+          
+        }
+
+        public async Task<bool> RegisterAsync(
+            RegisterRequestDto request,
+            WonDbContext db)
+        {
+            //Check Email - existingUser looks through all dbUsers and finds the first one with an email which matches the requestEmail
+            var existingUser =
+                await db.Users
+                .FirstOrDefaultAsync(
+                    u => u.Email == request.Email);
+
+            //if the user already exists(is registered), throw BadRequest
+            if (existingUser != null)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Email) ||
+                string.IsNullOrWhiteSpace(request.Password))
+            {
+                return false;
+            }
+
+            //Create new user
+            var user = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            //Hash their password with method in authService
+            user.PasswordHash =
+                HashPassword(
+                    user,
+                    request.Password);
+
+            //Save the new user to the db
+            db.Users.Add(user);
+            await db.SaveChangesAsync();
+
+            return true;
         }
     }
 }
