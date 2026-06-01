@@ -2,6 +2,7 @@
 using Won.Api.Repositories.Interfaces;
 using Won.Api.Services.Interfaces;
 using Won.Shared.Dtos;
+using Won.Api.Exceptions;
 
 namespace Won.Api.Services
 {
@@ -13,16 +14,41 @@ namespace Won.Api.Services
         {
             _tripRepository = tripRepository;
         }
-        public async Task<List<Trip>> GetTripsAsync()
+        private static TripDto MapToDto(Trip trip)
         {
-            return await _tripRepository.GetTripsAsync();
+            return new TripDto
+            {
+                TripId = trip.TripId,
+                Name = trip.Name,
+                StartDate = trip.StartDate,
+                EndDate = trip.EndDate,
+                Location = trip.Location,
+                Details = trip.Details,
+                Budget = trip.Budget,
+                GroupSize = trip.GroupSize
+            };
         }
-        public async Task<Trip?> GetTripByIdAsync(int id)
+
+        public async Task<List<TripDto>> GetTripsAsync()
         {
-            return await _tripRepository.GetTripByIdAsync(id);
+            var trips = await _tripRepository.GetTripsAsync();
+            return trips.Select(MapToDto).ToList();
         }
-        public async Task<Trip> CreateTripAsync(CreateTripDto tripData)
+        public async Task<TripDto?> GetTripByIdAsync(int id)
         {
+            var trip = await _tripRepository.GetTripByIdAsync(id);
+            if(trip == null)
+            {
+                throw new NotFoundException($"Trip with ID {id} was not found.");
+            }
+            return MapToDto(trip);
+        }
+        public async Task<TripDto> CreateTripAsync(CreateTripDto tripData)
+        {
+            if (tripData.EndDate < tripData.StartDate)
+            {
+                throw new BadRequestException("End date cannot be before start date.");
+            }
             var trip = new Trip
             {
                 Name = tripData.Name,
@@ -34,15 +60,16 @@ namespace Won.Api.Services
                 GroupSize = tripData.GroupSize
             };
 
-            return await _tripRepository.CreateTripAsync(trip);
+            var created = await _tripRepository.CreateTripAsync(trip);
+            return MapToDto(created);
         }
-        public async Task<Trip?> UpdateTripAsync(int id, UpdateTripDto updatedTripData)
+        public async Task<TripDto?> UpdateTripAsync(int id, UpdateTripDto updatedTripData)
         {
             var trip = await _tripRepository.GetTripByIdAsync(id);
 
             if (trip == null)
             {
-                return null;
+                throw new NotFoundException($"Trip with ID {id} was not found.");
             }
 
             trip.Name = updatedTripData.Name;
@@ -53,11 +80,18 @@ namespace Won.Api.Services
             trip.Budget = updatedTripData.Budget;
             trip.GroupSize = updatedTripData.GroupSize;
 
-            return await _tripRepository.UpdateTripAsync(trip);
+            var updated = await _tripRepository.UpdateTripAsync(trip);
+            return updated == null ? null : MapToDto(updated);
         }
         public async Task<bool> DeleteTripAsync(int id)
         {
-            return await _tripRepository.DeleteTripAsync(id);
+            var deleted = await _tripRepository.DeleteTripAsync(id);
+            if (!deleted)
+            {
+                throw new NotFoundException($"Trip with ID {id} was not found.");
+
+            }
+            return deleted;
         }
     }
 }

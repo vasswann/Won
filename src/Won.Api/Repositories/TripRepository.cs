@@ -1,7 +1,8 @@
-﻿using Won.Api.Repositories.Interfaces;
-using Won.Api.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+
 using Won.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using Won.Api.Entities;
+using Won.Api.Repositories.Interfaces;
 
 namespace Won.Api.Repositories
 {
