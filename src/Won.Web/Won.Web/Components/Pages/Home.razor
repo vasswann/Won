@@ -1,7 +1,22 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+@code {
+    protected override void OnInitialized()
+    {
+        // TODO:
+        // Replace this hardcoded redirect with an IsLoggedIn()
+        // check once authentication has been implemented.
+        //
+        // if (IsLoggedIn())
+        // {
+        //     Navigation.NavigateTo("/dashboard");
+        // }
+        // else
+        // {
+        //     Navigation.NavigateTo("/login");
+        // }
 
-<h1 class="has-text-danger">Hello, world!</h1>
-
-Welcome to your new app.
+        Navigation.NavigateTo("/login");
+    }
+}
