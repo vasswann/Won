@@ -1,43 +1,84 @@
-﻿@page "/api/login"
-@rendermode InteractiveAuto
+﻿@page "/login"
+@layout AuthLayout
+@using Won.Web.Components.Layout
+@using System.ComponentModel.DataAnnotations
 
-<PageTitle>Login</PageTitle>
+<div class="has-text-centered mb-5">
+    <div class="is-inline-flex is-align-items-center is-justify-content-center
+                has-background-dark has-text-white
+                p-4 mb-4"
+         style="border-radius: 1rem;">
+        <span class="title is-2 has-text-white m-0">W</span>
+    </div>
+    <h1 class="title is-3">Login</h1>
+</div>
 
-<div class="container">
-    <h2>Login</h2>
+<EditForm Model="_model" OnValidSubmit="HandleLoginAsync">
+    <DataAnnotationsValidator />
 
     <div class="field">
         <label class="label">Email</label>
         <div class="control">
-            <input class="input" type="email" @bind="email" placeholder="e.g. alexsmith@gmail.com">
+            <InputText class="input"
+                       type="email"
+                       placeholder="Enter your email"
+                       @bind-Value="_model.Email" />
         </div>
+        <ValidationMessage For="@(() => _model.Email)" />
     </div>
 
     <div class="field">
         <label class="label">Password</label>
         <div class="control">
-            <input class="input" type="password" @bind="password" placeholder="Password" />
+            <InputText class="input"
+                       type="password"
+                       placeholder="Enter your password"
+                       @bind-Value="_model.Password" />
         </div>
+        <ValidationMessage For="@(() => _model.Password)" />
     </div>
 
-    <div class="container button-container">
+    <div class="field">
+        <label class="checkbox">
+            <InputCheckbox @bind-Value="_model.RememberMe" />
+            Remember me
+        </label>
+    </div>
+
+    <div class="field mt-5">
         <div class="control">
-            <button class="button is-primary" @onclick="methodTBD">Register</button>
+            <button type="submit"
+                    class="button is-primary is-fullwidth">
+                Login
+            </button>
         </div>
-
     </div>
 
-</div>
-
+    <p class="has-text-centered mt-4">
+        Don't have an account?
+        <NavLink href="/register">
+            Register
+        </NavLink>
+    </p>
+</EditForm>
 
 @code {
-    private string email = "";
-    private string password = "";
-    private string[] errors = [];
+    private readonly LoginModel _model = new();
 
-    public void methodTBD()
+    private Task HandleLoginAsync()
     {
-        // Waiting for method
+        return Task.CompletedTask;
     }
 
+    private sealed class LoginModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        public string Password { get; set; } = string.Empty;
+
+        public bool RememberMe { get; set; }
+    }
 }

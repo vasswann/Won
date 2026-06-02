@@ -15,5 +15,6 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="src\Won.Web\Won.Web.Client\Pages\Component.razor" />
   </ItemGroup>
 </Project>
