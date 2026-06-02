@@ -1,5 +1,9 @@
-﻿@page "/api/login"
-@rendermode InteractiveAuto
+﻿@page "/login"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@using Won.Shared.Dtos
+@using System.Net.Http.Json
+
 
 <PageTitle>Login</PageTitle>
 
@@ -22,8 +26,21 @@
 
     <div class="container button-container">
         <div class="control">
-            <button class="button is-primary" @onclick="methodTBD">Register</button>
+            <button class="button is-primary" @onclick="LoginUser">Login</button>
         </div>
+    @if (errors.Length > 0)
+        {
+            <ul>
+                @foreach (var error in errors)
+                {
+                    <li class="has-text-danger">@error</li>
+                }
+            </ul>
+        }
+    @if (!string.IsNullOrWhiteSpace(successMessage))
+        {
+            <p class="has-text-success">@successMessage</p>
+        }
 
     </div>
 
@@ -34,10 +51,42 @@
     private string email = "";
     private string password = "";
     private string[] errors = [];
+    private string successMessage = "";
 
-    public void methodTBD()
-    {
-        // Waiting for method
+    public async Task LoginUser()
+    {       
+        try
+        {
+            var request = new LoginRequestDto
+            {
+                Email = email,
+                Password = password
+            };
+
+            var response =
+                await Http.PostAsJsonAsync(
+                    "api/auth/login",
+                    request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var loginResponse =
+                   await response.Content
+                   .ReadFromJsonAsync<LoginResponseDto>();
+
+                successMessage = "Login successful!";
+
+                var token = loginResponse?.Token;
+
+            }
+            else
+            {
+                errors = [$"Status code: {response.StatusCode}"];
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = [ex.ToString()];
+        }
     }
-
 }

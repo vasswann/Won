@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
 using System.Net.Http;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
-await builder.Build().RunAsync();
 
 builder.Services.AddScoped(sp =>
     new HttpClient
