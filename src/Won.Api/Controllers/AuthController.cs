@@ -54,6 +54,7 @@ namespace Won.Api.Controllers
         public async Task<IActionResult> Register(
             RegisterRequestDto request)
         {
+            Console.WriteLine("REGISTER ENDPOINT HIT");
             bool success =
                 await _authService.RegisterAsync(
                     request,

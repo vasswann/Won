@@ -1,5 +1,8 @@
-﻿@page "/api/registration"
-@rendermode InteractiveAuto
+﻿@page "/registration"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@using Won.Shared.Dtos
+@using System.Net.Http.Json
 
 <PageTitle>Register</PageTitle>
 
@@ -10,7 +13,7 @@
         <label class="label">Username</label>
         <div class="control">
             <input class="input" type="text" @bind="username" placeholder="e.g Alex Smith">
-        </div>
+        </div> 
     </div>
 
     <div class="field">
@@ -28,7 +31,7 @@
     </div>
 
     <div class="control">
-        <button class="button is-primary" @onclick="methodTBD">Register</button>
+        <button class="button is-primary" @onclick="RegisterUser">Register</button>
     </div>
 
     <div class="control">
@@ -36,16 +39,66 @@
     </div>
 </div>
 
+@if (errors.Length > 0)
+{
+    <ul>
+        @foreach (var error in errors)
+        {
+            <li class="has-text-danger">@error</li>
+        }
+    </ul>
+}
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <p class="has-text-success">@successMessage</p>
+}
 
 @code {
     private string email = "";
     private string username = "";
     private string password = "";
     private string[] errors = [];
+    private string successMessage = "";
 
-    public void methodTBD()
+    public async Task RegisterUser()
     {
-        // Waiting for method
+        try
+        {
+            var request = new RegisterRequestDto
+                {
+                    FirstName = username,
+                    LastName = "",
+                    Email = email,
+                    Password = password
+                };
+
+            successMessage =
+    $"{Http.BaseAddress}api/auth/register";
+
+            var response =
+                await Http.PostAsJsonAsync(
+                    "api/auth/register",
+                    request
+                );
+
+            if(response.IsSuccessStatusCode)
+            {
+                successMessage = "Registration successful!";
+                errors = [];
+            }
+            else
+            {
+                errors = [$"Status code: {response.StatusCode}"];
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = [ex.ToString()];
+        }
+
+
+
     }
 
 }
