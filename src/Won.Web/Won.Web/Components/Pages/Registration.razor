@@ -73,9 +73,7 @@
                     Password = password
                 };
 
-            successMessage =
-    $"{Http.BaseAddress}api/auth/register";
-
+            
             var response =
                 await Http.PostAsJsonAsync(
                     "api/auth/register",
