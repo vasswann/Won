@@ -18,7 +18,9 @@
     <h1 class="title is-3">Login</h1>
 </div>
 
-<EditForm Model="_model" OnValidSubmit="HandleLoginAsync">
+<EditForm Model="_model" 
+    OnValidSubmit="HandleLoginAsync"
+    FormName="LoginForm">
     <DataAnnotationsValidator />
 
     <div class="field">
