@@ -1,0 +1,18 @@
+﻿.trip-page-container .title.is-4,
+.trip-page-container .subtitle.is-6,
+.trip-page-container .content {
+    color: white;
+}
+
+.trip-page-container .card-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 15px;
+    max-width: auto;
+    background-color: #464646;
+    margin-bottom: 20px;
+}
