@@ -6,6 +6,11 @@ using Won.Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Won.Api.Data;
 using Won.Api.Middleware;
+using Microsoft.AspNetCore.Identity;
+using Won.Api.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 Env.TraversePath().Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -15,12 +20,79 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen(); commented out because the default version does not know how to understand Bearer authentication
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer",
+        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            Description = "Enter JWT token"
+        });
+
+    options.AddSecurityRequirement(
+        new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+        {
+            {
+                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                    {
+                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+});
+
+
+//adding AuthService
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ITripRepository, TripRepository>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 builder.Services.AddScoped<IActivityRecommendationService, ActivityRecommendationService>();
+
+//Dependency Injection for AuthService to create a passwordhash
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
+// JWT Middleware. Note: "bearer" means "whoever bears this troken is authenticated"
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+
+    options.DefaultChallengeScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var SecretjwtKey =
+        Environment.GetEnvironmentVariable("JWT_KEY");
+
+    options.TokenValidationParameters =
+        new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            IssuerSigningKey =
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(SecretjwtKey!))
+        };
+});
+
 
 // Database configuration
 var connectionName = Environment.GetEnvironmentVariable("DB_CONNECTION_NAME")
@@ -61,8 +133,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
+//Authentication for JWT middleware 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // .env smoke test
