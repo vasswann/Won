@@ -3,7 +3,7 @@
 @inject HttpClient http
 @inject NavigationManager Navigation
 
-<form @onsubmit="SubmitTrip" class="trip-form-container" style="max-width: 600px; padding: 20px;">
+<EditForm Model="@MyTrip" OnValidSubmit="SubmitTrip" class="trip-form-container" style="max-width: 600px; padding: 20px;">
     <div class="box">
         <div class="field">
             <label class="label">Trip Name</label>
@@ -87,7 +87,7 @@
             <a href="/trips" class="button is-light">Cancel</a>
         </div>
     </div>
-</form>
+</EditForm>
 
 @code {
     [Parameter]
