@@ -1,0 +1,28 @@
+﻿@* WIP to replace current Home, which currently 'redirects'to Login.razor, which is just the form itself 
+    Maybe rename to Welcome page?? Can make home the dashboard
+*@
+
+@* @page "/login-page" *@
+@* @inject NavigationManager Navigation *@
+@page "/login"
+@layout AuthLayout
+@using Won.Web.Components.Layout
+
+<PageTitle>Login</PageTitle>
+
+<section class="container auth-card">
+    <div class="columns is-centered">
+        <div class="column is-6">
+            <div class="card">
+                <div class="card-content px-6 py-6">
+                    <LoginForm />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@code {
+
+}

@@ -1,4 +1,4 @@
-﻿@* @page "/trips/{Id:int}"
+﻿@page "/trips/{Id:int}"
 @using Won.Shared.Models
 @inject HttpClient Http
 @rendermode InteractiveServer
@@ -64,4 +64,4 @@ else
     {
         MyTrip = await Http.GetFromJsonAsync<Trip>($"api/trips/{Id}");
     }
-} *@
+}

@@ -1,0 +1,41 @@
+﻿/* ==========================================================================
+   Custom Styles
+   ========================================================================== */
+
+/* TEMP STYLES -  NEED TO CLEAN UP MENU BELOW!! */
+.navbar-logo .logo-square {
+    border-radius: 1rem;
+    margin-bottom: 0;
+    border: 2px solid rgb(88 96 116);
+}
+
+/* Apply Bulma's side-menu active styles to Blazor's active NavLinks */
+.sidebar {
+    background-image: linear-gradient(130deg, rgb(2 43 119) 0%, #4b6083 80%) !important;
+}
+
+.menu-label {
+    color: var(--bulma-menu-label-color);
+    color: rgb(133 142 163);
+    padding: 0.5rem 1rem;
+}
+
+.menu-list .menu-item, .menu-list a, .menu-list button {
+    width: 80%;
+    margin: 1em auto;
+    color: rgb(142 154 175);
+    font-weight: 600;
+    background-color: hsla(var(--bulma-text-h), var(--bulma-text-s), var(--bulma-text-l), .9);
+}
+
+.menu-list a.active {
+    background-color: var(--bulma-menu-item-active-background-color, #3298dc);
+    color: var(--bulma-menu-item-active-color, #fff);
+}
+
+.menu-list .menu-item:hover, .menu-list a:hover, .menu-list button:hover {
+    color: hsl(218 17% 42% / 1);
+    background-color: hsla(var(--bulma-text-h), var(--bulma-text-s), var(--bulma-text-l), .9);
+    background-color: #f7f7f8;
+    background-color: aliceblue;
+}

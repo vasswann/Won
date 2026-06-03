@@ -1,0 +1,117 @@
+﻿@* @page "/register" *@
+@* @layout AuthLayout *@
+@* @using Won.Web.Components.Layout *@
+
+@using System.ComponentModel.DataAnnotations
+
+<div class="container">
+    <LogoSquare />
+
+    <h1 class="title is-3 has-text-centered mb-5">Create Account</h1>
+
+    <EditForm Model="_model" OnValidSubmit="HandleRegisterAsync">
+        <DataAnnotationsValidator />
+
+        <div class="field">
+            <label class="label">First name</label>
+            <div class="control">
+                <InputText class="input"
+                           placeholder="Enter your first name"
+                           @bind-Value="_model.FirstName" />
+            </div>
+            <ValidationMessage For="@(() => _model.FirstName)" />
+        </div>
+
+        <div class="field">
+            <label class="label">Last name</label>
+            <div class="control">
+                <InputText class="input"
+                           placeholder="Enter your last name"
+                           @bind-Value="_model.LastName" />
+            </div>
+            <ValidationMessage For="@(() => _model.LastName)" />
+        </div>
+
+        <div class="field">
+            <label class="label">Email</label>
+            <div class="control">
+                <InputText class="input"
+                           type="email"
+                           placeholder="Enter your email"
+                           @bind-Value="_model.Email" />
+            </div>
+            <ValidationMessage For="@(() => _model.Email)" />
+        </div>
+
+        <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+                <InputText class="input"
+                           type="password"
+                           placeholder="Enter your password"
+                           @bind-Value="_model.Password" />
+            </div>
+            <ValidationMessage For="@(() => _model.Password)" />
+        </div>
+
+        <div class="field">
+            <label class="label">Confirm password</label>
+            <div class="control">
+                <InputText class="input"
+                           type="password"
+                           placeholder="Confirm your password"
+                           @bind-Value="_model.ConfirmPassword" />
+            </div>
+            <ValidationMessage For="@(() => _model.ConfirmPassword)" />
+        </div>
+
+        <div class="field mt-5">
+            <button type="submit" class="button is-primary is-fullwidth">
+                Register
+            </button>
+        </div>
+
+        <p class="has-text-centered mt-4">
+            Already have an account?
+            <NavLink href="/login">
+                Login
+            </NavLink>
+        </p>
+    </EditForm>
+
+</div>
+
+@code {
+    private readonly RegisterModel _model = new();
+
+    private async Task HandleRegisterAsync()
+    {
+        // TODO:
+        // 1. Call API register endpoint
+        // 2. Optionally save JWT token
+        // 3. Navigate to /dashboard or /login
+
+        await Task.CompletedTask;
+    }
+
+    private sealed class RegisterModel
+    {
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+}
