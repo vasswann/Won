@@ -1,19 +1,10 @@
-﻿@using Won.Shared.Models
-@inject NavigationManager Navigation
+﻿@inject NavigationManager Navigation
 
-<NavLink @onclick="GoToEdit">Edit Trip</NavLink>
+<NavLink class="button is-link is-normal" @onclick="GoToUpdate">Update Trip</NavLink>
 
 @code {
-    [Parameter]
-    public required Trip ThisTrip { get; set; }
-
-    private void GoToEdit()
+    private void GoToUpdate()
     {
-        if (ThisTrip is null)
-        {
-            Console.WriteLine("ThisTrip is null");
-            return;
-        }
-        Navigation.NavigateTo($"/trips/update/{ThisTrip.TripId}");
+        Navigation.NavigateTo("/trips/update");
     }
 }
