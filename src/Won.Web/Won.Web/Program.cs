@@ -2,7 +2,6 @@ using Won.Web.Components;
 using Won.Web.Services.Locations;
 using Won.Web.Services.Trips;
 using Won.Web.Services.Weather;
-using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
