@@ -1,0 +1,26 @@
+﻿@using Won.Shared.Models
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<div class="mb-4">
+    <button class="button is-link is-normal" id="create-trip-button" @onclick="CreateTrip">Create Trip</button>
+</div>
+
+@code {
+    [Parameter]
+    public required Trip ThisTrip { get; set; }
+
+    private async Task CreateTrip()
+    {
+        // var response = await Http.PostAsync($"api/trips");
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     Navigation.NavigateTo("/trips");
+        // }
+
+
+        Navigation.NavigateTo("/trips");
+
+    }
+}
