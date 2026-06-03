@@ -1,11 +1,10 @@
 ﻿@inject NavigationManager Navigation
 
-<div class="mb-4">
-    <button class="button is-link is-normal"
-            @onclick="GoToCreate">
-        Create Trip
-    </button>
-</div>
+<NavLink class="button is-link is-normal"
+         @onclick="GoToCreate">
+    Create Trip
+</NavLink>
+
 
 @code {
     private void GoToCreate()
