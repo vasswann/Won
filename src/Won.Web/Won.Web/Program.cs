@@ -11,12 +11,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<FakeTripService>();
+builder.Services.AddScoped<TripsService>();
+
 builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<LocationImageService>();
 
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7002/")
+    BaseAddress = new Uri("http://localhost:8080/")
 });
 
 var app = builder.Build();
