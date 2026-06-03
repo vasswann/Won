@@ -12,15 +12,11 @@
 
     private async Task CreateTrip()
     {
-        // var response = await Http.PostAsync($"api/trips");
+        var response = await Http.PostAsJsonAsync($"api/trips", ThisTrip);
 
-        // if (response.IsSuccessStatusCode)
-        // {
-        //     Navigation.NavigateTo("/trips");
-        // }
-
-
-        Navigation.NavigateTo("/trips");
-
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/trips");
+        }
     }
 }
