@@ -29,3 +29,11 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.h-100 {
+    height: 100%;
+}
+
+.trip-hero-image {
+    object-fit: cover;
+}

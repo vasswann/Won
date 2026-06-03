@@ -1,0 +1,34 @@
+﻿@using Won.Shared.Dtos
+
+<div class="card is-flex is-flex-direction-column h-100">
+    <div class="card-content is-flex-grow-1">
+        <p class="title is-5">@Activity.Title</p>
+
+        <p class="content">
+            @Activity.Description
+        </p>
+
+        <p>
+            <strong>Difficulty:</strong> @Activity.Difficulty
+        </p>
+
+        <p>
+            <strong>Duration:</strong> @Activity.Duration
+        </p>
+
+        <p>
+            <strong>Estimated cost:</strong> @Activity.EstimatedCost
+        </p>
+    </div>
+
+    <footer class="card-footer mt-auto">
+        <button class="card-footer-item button is-white">
+            Save to favourites
+        </button>
+    </footer>
+</div>
+
+@code {
+    [Parameter]
+    public ActivitySuggestionDto Activity { get; set; } = new();
+}

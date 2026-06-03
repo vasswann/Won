@@ -1,8 +1,8 @@
 using Won.Web.Components;
+using Won.Web.Services.Activities;
 using Won.Web.Services.Locations;
 using Won.Web.Services.Trips;
 using Won.Web.Services.Weather;
-using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,7 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped<FakeTripService>();
 builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<LocationImageService>();
+builder.Services.AddScoped<ActivitySuggestionService>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()

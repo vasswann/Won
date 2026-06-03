@@ -30,9 +30,7 @@ public class GeminiActivitySuggestionService : IAiActivitySuggestionService
 
         var prompt = $@"
         You are a travel activity suggestion assistant.
-
         Suggest exactly 3 activities for this trip.
-
         Trip location:
         {request.Location}
 

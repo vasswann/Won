@@ -1,13 +1,18 @@
 ﻿@page "/trips/{TripId:int}"
 
+@rendermode InteractiveServer
+
 @using Won.Shared.Dtos
+@using Won.Web.Components.Activities
 @using Won.Web.Services.Locations
 @using Won.Web.Services.Trips
 @using Won.Web.Services.Weather
+@using Won.Web.Services.Activities
 
 @inject FakeTripService TripService
 @inject WeatherService WeatherService
 @inject LocationImageService LocationImageService
+@inject ActivitySuggestionService ActivitySuggestionService
 
 <PageTitle>Trip Details</PageTitle>
 
@@ -21,45 +26,52 @@
 }
 else
 {
-    <div class="columns is-vcentered mb-6">
-        <div class="column is-half">
-            @if (!string.IsNullOrWhiteSpace(_locationImage?.ImageUrl))
-            {
-                <figure class="image is-4by3">
-                    <img src="@_locationImage.ImageUrl"
-                         alt="@_trip.Location">
-                </figure>
-            }
-            else
-            {
-                <div class="box has-text-centered">
-                    <p class="title is-1">W</p>
-                    <p>No image available for this location.</p>
-                </div>
-            }
-        </div>
+    <section class="box mb-6">
+        <div class="columns is-vcentered is-variable is-8">
+            <div class="column is-half">
+                @if (!string.IsNullOrWhiteSpace(_locationImage?.ImageUrl))
+                {
+                    <figure class="image is-16by9">
+                        <img class="is-rounded trip-hero-image"
+                             src="@_locationImage.ImageUrl"
+                             alt="@_trip.Location">
+                    </figure>
+                }
+                else
+                {
+                    <div class="box has-text-centered">
+                        <p class="title is-1">W</p>
+                        <p>No image available for this location.</p>
+                    </div>
+                }
+            </div>
 
-        <div class="column is-half">
-            <h1 class="title is-2">@_trip.Name</h1>
-
-            <p class="subtitle is-5">
-                @_trip.Location
-            </p>
-
-            @if (!string.IsNullOrWhiteSpace(_locationImage?.Extract))
-            {
-                <p>
-                    @_locationImage.Extract
+            <div class="column is-half">
+                <p class="tag is-primary is-light mb-3">
+                    Trip destination
                 </p>
-            }
-            else
-            {
-                <p>
-                    @_trip.Details
+
+                <h1 class="title is-1 mb-2">
+                    @_trip.Name
+                </h1>
+
+                <p class="subtitle is-4 mb-4">
+                    @_trip.Location
                 </p>
-            }
+
+                <p class="is-size-5 has-text-grey-dark">
+                    @if (!string.IsNullOrWhiteSpace(_locationImage?.Extract))
+                    {
+                        @_locationImage.Extract
+                    }
+                    else
+                    {
+                        @_trip.Details
+                    }
+                </p>
+            </div>
         </div>
-    </div>
+    </section>
 
     <article class="message is-info">
         <div class="message-header">
@@ -113,30 +125,83 @@ else
     </article>
 
     <div class="box">
-        <p>
-            <strong>Dates:</strong>
-            @_trip.StartDate.ToString("dd MMM yyyy") - @_trip.EndDate.ToString("dd MMM yyyy")
-        </p>
+        <h2 class="title is-4 mb-4">Trip details</h2>
 
-        <p>
-            <strong>Budget:</strong>
-            @_trip.Budget.ToString("C")
-        </p>
+        <div class="columns is-multiline">
+            <div class="column is-half">
+                <p class="mb-2">
+                    <span class="has-text-weight-semibold">Dates:</span>
+                    @_trip.StartDate.ToString("dd MMM yyyy") - @_trip.EndDate.ToString("dd MMM yyyy")
+                </p>
 
-        <p>
-            <strong>Group size:</strong>
-            @_trip.GroupSize
-        </p>
+                <p class="mb-2">
+                    <span class="has-text-weight-semibold">Budget:</span>
+                    @_trip.Budget.ToString("C")
+                </p>
 
-        <p>
-            <strong>Details:</strong>
-            @_trip.Details
-        </p>
+                <p class="mb-2">
+                    <span class="has-text-weight-semibold">Group size:</span>
+                    @_trip.GroupSize
+                </p>
+            </div>
+
+            <div class="column is-half">
+                <p>
+                    <span class="has-text-weight-semibold">Details:</span>
+                    @_trip.Details
+                </p>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="buttons">
+            <NavLink href="/trips" class="button is-light">
+                Back to Trips
+            </NavLink>
+
+            <NavLink href="@($"/trips/edit/{_trip.TripId}")" class="button is-info">
+                Edit Trip
+            </NavLink>
+
+            <button class="button is-danger">
+                Delete Trip
+            </button>
+        </div>
     </div>
 
-    <NavLink href="/trips" class="button is-light">
-        Back to Trips
-    </NavLink>
+    <article class="message is-primary">
+        <div class="message-header">
+            <p>AI activity suggestions</p>
+        </div>
+
+        <div class="message-body">
+            <button class="button is-primary mb-4"
+                    @onclick="GenerateActivitySuggestionsAsync"
+                    disabled="@_isGeneratingSuggestions">
+                @if (_isGeneratingSuggestions)
+                {
+                    <span>Generating suggestions...</span>
+                }
+                else
+                {
+                    <span>Suggest activities</span>
+                }
+            </button>
+
+            @if (_activitySuggestions.Count > 0)
+            {
+                <div class="columns is-multiline is-align-items-stretch">
+                    @foreach (var activity in _activitySuggestions)
+                    {
+                        <div class="column is-one-third is-flex">
+                            <ActivitySuggestionCard Activity="activity" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </article>
 }
 
 @code {
@@ -148,6 +213,8 @@ else
     private bool _isWeatherAvailable;
     private bool _isWeatherLoading;
     private LocationImageDto? _locationImage;
+    private List<ActivitySuggestionDto> _activitySuggestions = [];
+    private bool _isGeneratingSuggestions;
 
     protected override async Task OnInitializedAsync()
     {
@@ -194,5 +261,33 @@ else
             weatherEnd);
 
         _isWeatherLoading = false;
+    }
+
+    private async Task GenerateActivitySuggestionsAsync()
+    {
+        if(_trip is null)
+        {
+            return;
+        }
+
+        _isGeneratingSuggestions = true;
+
+        var request = new ActivitySuggestionRequestDto
+        {
+            Location = _trip.Location,
+            StartDate = _trip.StartDate,
+            EndDate = _trip.EndDate,
+            Budget = _trip.Budget,
+            GroupSize = _trip.GroupSize
+        };
+
+        var response = await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+
+        if(response.Success)
+        {
+            _activitySuggestions = response.Data ?? [];
+        }
+
+        _isGeneratingSuggestions = false;
     }
 }
