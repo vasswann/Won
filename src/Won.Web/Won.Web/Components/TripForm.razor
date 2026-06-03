@@ -1,4 +1,4 @@
-﻿@using Won.Shared.Models
+﻿@using Won.Shared.Dtos
 @using System.Net.Http.Json
 @inject HttpClient http
 @inject NavigationManager Navigation
@@ -81,7 +81,7 @@
 
     <div class="field is-grouped is-grouped-right">
         <div class="control">
-            <button type="submit" class="button is-link">Save Trip</button>
+            <button type="submit" class="button is-link">Submit</button>
         </div>
         <div class="control">
             <a href="/trips" class="button is-light">Cancel</a>
@@ -91,26 +91,13 @@
 
 @code {
     [Parameter]
-    public Trip MyTrip { get; set; } = new Trip();
+    public TripDto MyTrip { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<TripDto> OnSubmit { get; set; }
+
     private async Task SubmitTrip()
     {
-        try
-        {
-            int Id = MyTrip.TripId;
-            var response = await http.PostAsJsonAsync($"api/{Id}", MyTrip);
-
-            if (response.IsSuccessStatusCode)
-            {
-                Navigation.NavigateTo("/trips");
-            }
-            else
-            {
-                Console.WriteLine($"Server error: {response.StatusCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Network error: {ex.Message}");
-        }
+        await OnSubmit.InvokeAsync(MyTrip);
     }
 }
