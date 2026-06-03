@@ -1,4 +1,7 @@
 using Won.Web.Components;
+using Won.Web.Services.Locations;
+using Won.Web.Services.Trips;
+using Won.Web.Services.Weather;
 using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,10 @@ builder.Services.AddScoped(sp =>
     {
         BaseAddress = new Uri("http://won.api:8080")
     });
+
+builder.Services.AddScoped<FakeTripService>();
+builder.Services.AddScoped<WeatherService>();
+builder.Services.AddScoped<LocationImageService>();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
@@ -25,7 +32,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
