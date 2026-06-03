@@ -3,12 +3,12 @@
 @inject HttpClient http
 @inject NavigationManager Navigation
 
-<form @onsubmit="SubmitTrip" style="max-width: 600px; padding: 20px;">
+<form @onsubmit="SubmitTrip" class="trip-form-container" style="max-width: 600px; padding: 20px;">
     <div class="box">
         <div class="field">
             <label class="label">Trip Name</label>
-            <div class="field">
-                <input class="name" type="text" @bind="MyTrip.Name" placeholder="Summer Vacation 2026" required />
+            <div class="control">
+                <input class="input" type="text" @bind="MyTrip.Name" placeholder="Summer Vacation 2026" required />
             </div>
             <p class="help is-danger">Trip Name Is Required</p>
         </div>
@@ -18,7 +18,7 @@
         <div class="field">
             <label class="label">Start Date</label>
             <div class="control has-icons-right">
-                <input class="start-date" type="date" @bind="MyTrip.StartDate" placeholder="DD/MM/YYYY" required />
+                <input class="input" type="date" @bind="MyTrip.StartDate" placeholder="DD/MM/YYYY" required />
                 <span class="icon is-small is-right">
                     <i class="fas fa-calendar-alt"></i>
                 </span>
@@ -31,7 +31,7 @@
         <div class="field">
             <label class="label">End Date</label>
             <div class="control has-icons-right">
-                <input class="end-date" type="date" @bind="MyTrip.EndDate" placeholder="DD/MM/YYYY" required />
+                <input class="input" type="date" @bind="MyTrip.EndDate" placeholder="DD/MM/YYYY" required />
                 <span class="icon is-small is-right">
                     <i class="fas fa-calendar-check"></i>
                 </span>
@@ -43,8 +43,8 @@
     <div class="box">
         <div class="field">
             <label class="label">Location</label>
-            <div class="field">
-                <input class="location" type="text" @bind="MyTrip.Location" placeholder="Paris, France" required />
+            <div class="control">
+                <input class="input" type="text" @bind="MyTrip.Location" placeholder="Milan" required />
             </div>
             <p class="help is-danger">Location Is Required</p>
         </div>
@@ -54,9 +54,7 @@
         <div class="field">
             <label class="label">Details</label>
             <div class="control">
-                <div class="field">
-                    <textarea class="details" @bind="MyTrip.Details" placeholder="Add itinerary notes, packing lists, or hotel details..."></textarea>
-                </div>
+                <textarea class="textarea" @bind="MyTrip.Details" placeholder="Add itinerary notes, packing lists, or hotel details..."></textarea>
             </div>
         </div>
     </div>
@@ -64,8 +62,8 @@
     <div class="box">
         <div class="field">
             <label class="label">Budget</label>
-            <div class="field">
-                <input class="budget" type="number" @bind="MyTrip.Budget" min="0" placeholder="1500" required />
+            <div class="control">
+                <input class="input" type="number" @bind="MyTrip.Budget" min="0" placeholder="1500" required />
             </div>
             <p class="help is-danger">Budget Is Required</p>
         </div>
@@ -74,8 +72,8 @@
     <div class="box">
         <div class="field">
             <label class="label">Group Size</label>
-            <div class="field">
-                <input class="group-size" type="number" @bind="MyTrip.GroupSize" min="1" placeholder="4" required />
+            <div class="control">
+                <input class="input" type="number" @bind="MyTrip.GroupSize" min="1" placeholder="4" required />
             </div>
             <p class="help is-danger">Group Size Is Required</p>
         </div>
@@ -90,6 +88,7 @@
         </div>
     </div>
 </form>
+
 @code {
     [Parameter]
     public Trip MyTrip { get; set; } = new Trip();
