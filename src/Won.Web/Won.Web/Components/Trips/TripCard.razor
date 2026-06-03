@@ -1,0 +1,23 @@
+﻿@using Won.Shared.Dtos
+
+<NavLink href="@($"/trips/{Trip.TripId}")" class="card">
+    <div class="card-content">
+        <p class="title is-4">@Trip.Name</p>
+
+        <p class="subtitle is-6">
+            @Trip.Location
+        </p>
+
+        <div class="content">
+            <p>
+                <strong>Dates:</strong>
+                @Trip.StartDate.ToString("dd MMM yyyy") - @Trip.EndDate.ToString("dd MMM yyyy")
+            </p>
+        </div>
+    </div>
+</NavLink>
+
+@code {
+    [Parameter]
+    public TripListItemDto Trip { get; set; } = default!;
+}
