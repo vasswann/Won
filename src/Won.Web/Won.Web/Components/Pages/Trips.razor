@@ -4,16 +4,30 @@
 @using Won.Web.Components.Trips
 @using Won.Web.Services.Trips
 
-@inject TripsService TripService
+@inject FakeTripService TripService
+@inject TripsService TripService 
 
 <PageTitle>Trips</PageTitle>
-<div class="section">
-    <h1 class="title is-2">Trips</h1>
 
-    <p class="subtitle is-6">
-        View your planned trips.
-    </p>
-    <NavLink class="button is-link is-normal" href="/trips/create">Create Trip</NavLink>
+<section class="section">
+    <div class="level mb-5">
+        <div class="level-left">
+            <div>
+                <h1 class="title is-1 mb-2">Trips</h1>
+                <p class="subtitle is-5 has-text-grey">
+                    View and manage your planned trips.
+                </p>
+            </div>
+        </div>
+
+        <div class="level-right">
+            <NavLink class="button is-primary" href="/trips/create">
+                Create Trip
+            </NavLink>
+        </div>
+    </div>
+
+    <hr class="mb-6" />
 
     @if (_trips is null)
     {
@@ -21,19 +35,16 @@
     }
     else
     {
-        <div class="trip-page-container">
-            <div class="columns is-multiline">
-                @foreach (var trip in _trips)
-                {
-                    <div class="column is-half">
-                        <TripCard Trip="trip" />
-                        <NavLink class="button is-link is-small" href="@($"/trips/update/{trip.TripId}")">Update</NavLink>
-                    </div>
-                }
-            </div>
+        <div class="columns is-multiline">
+            @foreach (var trip in _trips)
+            {
+                <div class="column is-one-third">
+                    <TripCard Trip="trip" />
+                </div>
+            }
         </div>
     }
-</div>
+</section>
 
 @code {
     private List<TripListItemDto>? _trips;
