@@ -132,6 +132,13 @@ else
             <strong>Details:</strong>
             @_trip.Details
         </p>
+
+        <ActivityList TripId="@TripId" />
+
+        <NavLink class="button is-primary" href="@($"/activities/create/{TripId}")">
+            Add Activity
+        </NavLink>
+
     </div>
 
     <NavLink href="/trips" class="button is-light">
