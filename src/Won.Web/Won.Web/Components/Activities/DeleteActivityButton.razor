@@ -1,0 +1,59 @@
+﻿@inject Won.Web.Services.Activities.ActivityService ActivityService
+
+@if (!ShowConfirmation)
+{
+    <button class="button is-danger is-small" @onclick="OpenConfirmation">
+
+        Delete
+
+    </button>
+}
+else
+{
+    <div class="buttons">
+
+        <button class="button is-danger is-small" @onclick="DeleteActivity">
+
+            Confirm Delete
+
+        </button>
+
+        <button class="button is-light is-small" @onclick="CloseConfirmation">
+
+            Cancel
+
+        </button>
+
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public int ActivityId { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleted { get; set; }
+
+    private bool ShowConfirmation = false;
+
+    private void OpenConfirmation()
+    {
+        ShowConfirmation = true;
+    }
+
+    private void CloseConfirmation()
+    {
+        ShowConfirmation = false;
+    }
+
+    private async Task DeleteActivity()
+    {
+        var deleted = await ActivityService.DeleteActivityAsync(ActivityId);
+
+        if (deleted)
+        {
+            await OnDeleted.InvokeAsync();
+        }
+    }
+}
