@@ -6,7 +6,7 @@
 
 <div class="box most-active-trips-widget">
     <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
-        <h3 class="title is-4 mb-0">Most Active Trips</h3>
+        <h3 class="title is-4 mb-0">3 Most Active Trips</h3>
     </div>
 
     @if (isLoading)
@@ -58,8 +58,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Trips == null || Trips.Count == 0)
-            return;
+        if (Trips == null || Trips.Count == 0)return;
 
         isLoading = true;
 
