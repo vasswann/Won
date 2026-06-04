@@ -19,7 +19,7 @@ builder.Services.AddScoped(sp =>
 
 builder.Services.AddScoped<FakeTripService>();
 builder.Services.AddScoped<TripsService>();
-builder.Services.AddScoped<ActivityService>();
+builder.Services.AddScoped<ActivityService>(); 
 builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<LocationImageService>();
 
