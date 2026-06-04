@@ -3,7 +3,6 @@ using Won.Web.Services.Activities;
 using Won.Web.Services.Locations;
 using Won.Web.Services.Trips;
 using Won.Web.Services.Weather;
-using Won.Web.Services.Activities;
 
 
 var builder = WebApplication.CreateBuilder(args);
