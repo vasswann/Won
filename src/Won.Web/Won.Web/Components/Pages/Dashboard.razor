@@ -1,9 +1,35 @@
 ﻿@page "/dashboard"
+@using Won.Shared.Dtos
+@using Won.Web.Components.Trips
+@using Won.Web.Services.Trips
+@inject TripsService TripsService
 
 <PageTitle>Dashboard</PageTitle>
 
 <h1 class="title is-2">Dashboard</h1>
 
-<p class="subtitle is-6">
-    Welcome to Won.
-</p>
+@if (trips is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="is-flex is-justify-content-flex-end mb-4">
+        <NavLink class="button is-link is-normal" href="/trips/create">Create Trip</NavLink>
+    </div>
+
+    <div class="widget-container is-flex is-gap-4">
+        <RecentTripsWidget Trips="trips" />
+        <UpcomingTripsComponent Trips="trips" />
+        <MostActiveTripWidget Trips="trips" />
+    </div>
+}
+
+@code {
+    private List<TripListItemDto>? trips;
+
+    protected override async Task OnInitializedAsync()
+    {
+        trips = await TripsService.GetTripsAsync();
+    }
+}

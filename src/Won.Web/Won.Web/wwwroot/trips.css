@@ -1,0 +1,39 @@
+﻿.trip-page-container .title.is-4,
+.trip-page-container .subtitle.is-6,
+.trip-page-container .content {
+    color: black;
+}
+
+.trip-page-container .card-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 15px;
+    max-width: auto;
+    background-color: mediumaquamarine !important;
+    margin-bottom: 20px;
+}
+
+.card-content:hover{
+    background-color: aquamarine !important;
+}
+
+.trip-form-container .box{
+    border: 2px solid black;
+}
+
+#create-trip-button {
+    margin-bottom: 24px !important;
+}
+
+.recent-trips-widget,
+.upcoming-trips-widget,
+.most-active-trips-widget {
+    max-width: 400px;
+    align-self: start;
+    background-color: mediumaquamarine;
+    border: 2px black solid;
+}
