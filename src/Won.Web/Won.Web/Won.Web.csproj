@@ -11,8 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Pages\Registration.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Won.Shared\Won.Shared.csproj" />
     <ProjectReference Include="..\Won.Web.Client\Won.Web.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.24" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
   </ItemGroup>

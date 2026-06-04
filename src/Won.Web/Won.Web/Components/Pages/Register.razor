@@ -1,4 +1,8 @@
 ﻿@page "/register"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@using Won.Shared.Dtos
+@using System.Net.Http.Json
 @layout AuthLayout
 @using Won.Web.Components.Layout
 @using System.ComponentModel.DataAnnotations
@@ -14,7 +18,9 @@
     <h1 class="title is-3">Create account</h1>
 </div>
 
-<EditForm Model="_model" OnValidSubmit="HandleRegisterAsync">
+<EditForm Model="_model"
+    OnValidSubmit="HandleRegisterAsync"
+    FormName="Registration">
     <DataAnnotationsValidator />
 
     <div class="field">
@@ -76,25 +82,67 @@
         </button>
     </div>
 
+    @if (errors.Length > 0)
+    {
+        <ul>
+            @foreach (var error in errors)
+            {
+                <li class="has-text-danger">@error</li>
+            }
+        </ul>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(successMessage))
+    {
+        <p class="has-text-success">@successMessage</p>
+    }
     <p class="has-text-centered mt-4">
         Already have an account?
         <NavLink href="/login">
             Login
         </NavLink>
     </p>
+
 </EditForm>
 
 @code {
     private readonly RegisterModel _model = new();
+    private string[] errors = [];
+    private string successMessage = "";
 
     private async Task HandleRegisterAsync()
     {
-        // TODO:
-        // 1. Call API register endpoint
-        // 2. Optionally save JWT token
-        // 3. Navigate to /dashboard or /login
+        try
+        {
+            var request = new RegisterRequestDto
+            {
+                FirstName = _model.FirstName,
+                LastName = _model.LastName,
+                Email = _model.Email,
+                Password = _model.Password
+            };
 
-        await Task.CompletedTask;
+            var response =
+                await Http.PostAsJsonAsync(
+                    "api/auth/register",
+                    request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "Registration successful!";
+                errors = [];
+            }
+            else
+            {
+                successMessage = "";
+                errors = [$"Status code: {response.StatusCode}"];
+            }
+        }
+        catch (Exception ex)
+        {
+            successMessage = "";
+            errors = [ex.Message];
+        }
     }
 
     private sealed class RegisterModel
