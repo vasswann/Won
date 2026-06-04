@@ -1,0 +1,23 @@
+﻿@page "/trips/create"
+@using Won.Shared.Dtos
+@rendermode InteractiveServer
+@inject HttpClient http
+@inject NavigationManager Navigation
+
+<h3>Plan your next trip!</h3>
+
+<TripForm MyTrip="_trip" OnSubmit="@CreateTrip" />
+
+@code{
+    private TripDto _trip = new();
+
+    private async Task CreateTrip(TripDto trip)
+    {
+        var response = await http.PostAsJsonAsync("api/trips", trip);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/trips");
+        }
+    }
+}
