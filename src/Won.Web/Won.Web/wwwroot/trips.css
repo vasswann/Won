@@ -29,12 +29,10 @@
     margin-bottom: 24px !important;
 }
 
-.recent-trips-widget {
+.recent-trips-widget,
+.upcoming-trips-widget{
     max-width: 400px;
     align-self: start;
-    background-color: turquoise;
-}
-
-.recent-trips-widget .trip-item {
-    border: 1px solid #000;
+    background-color: mediumaquamarine;
+    border: 2px black solid;
 }

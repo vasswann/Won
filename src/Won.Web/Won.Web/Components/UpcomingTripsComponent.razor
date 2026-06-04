@@ -1,0 +1,41 @@
+﻿@using Won.Shared.Dtos
+@using Won.Web.Components.Trips
+@inject NavigationManager Navigation
+
+<div class="box upcoming-trips-widget">
+    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+        <h3 class="title is-4 mb-0">Upcoming Trips</h3>
+
+        <a class="is-size-7" href="/trips">View all</a>
+    </div>
+
+    @if (UpcomingTrips.Count == 0)
+    {
+        <p class="has-text-grey is-size-7">No upcoming trips found.</p>
+    }
+    else
+    {
+        @foreach (var trip in UpcomingTrips)
+        {
+            <div class="trip-item">
+                <TripCard Trip="trip" />
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<TripListItemDto> Trips { get; set; } = [];
+
+    private List<TripListItemDto> UpcomingTrips =>
+        Trips.Where(t => t.StartDate > DateTime.UtcNow)
+                .OrderBy(t => t.StartDate)
+                .Take(5)
+                .ToList();
+    
+    private void GoToTrips()
+    {
+        Navigation.NavigateTo("/trips");
+    }
+}
