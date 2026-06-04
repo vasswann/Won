@@ -1,59 +1,58 @@
-﻿@inject Won.Web.Services.Activities.ActivityService ActivityService
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
 
-@if (!ShowConfirmation)
+@if (!showConfirmation)
 {
-    <button class="button is-danger is-small" @onclick="OpenConfirmation">
-
+    <button class="button is-danger is-small" @onclick="ShowConfirmation">
         Delete
-
     </button>
 }
 else
 {
     <div class="buttons">
 
-        <button class="button is-danger is-small" @onclick="DeleteActivity">
-
-            Confirm Delete
-
+        <button class="button is-danger is-small"
+                type="button"
+                @onclick="DeleteActivity">
+            Yes, Delete
         </button>
 
-        <button class="button is-light is-small" @onclick="CloseConfirmation">
-
+        <button class="button is-light is-small"
+                type="button"
+                @onclick="CancelDelete">
             Cancel
-
         </button>
 
     </div>
 }
 
 @code {
-
     [Parameter]
     public int ActivityId { get; set; }
 
     [Parameter]
-    public EventCallback OnDeleted { get; set; }
+    public int TripId { get; set; }
 
-    private bool ShowConfirmation = false;
+    private bool showConfirmation;
 
-    private void OpenConfirmation()
+    private void ShowConfirmation()
     {
-        ShowConfirmation = true;
+        showConfirmation = true;
     }
 
-    private void CloseConfirmation()
+    private void CancelDelete()
     {
-        ShowConfirmation = false;
+        showConfirmation = false;
     }
 
     private async Task DeleteActivity()
     {
-        var deleted = await ActivityService.DeleteActivityAsync(ActivityId);
+        var response = await Http.DeleteAsync($"api/activities/{ActivityId}");
+        Navigation.NavigateTo(Navigation.Uri, true);
 
-        if (deleted)
+        if (response.IsSuccessStatusCode)
         {
-            await OnDeleted.InvokeAsync();
+            showConfirmation = false;
         }
     }
 }

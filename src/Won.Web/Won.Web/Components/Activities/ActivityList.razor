@@ -54,8 +54,7 @@ else
 
                         </NavLink>
 
-                        <DeleteActivityButton ActivityId="@activity.ActivityId" OnDeleted="LoadActivities" />
-
+                        <DeleteActivityButton ActivityId="@activity.ActivityId" />
                     </div>
 
                 </div>
@@ -72,12 +71,6 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        await LoadActivities();
-    }
-
-    private async Task LoadActivities()
-    {
         Activities = await ActivityService.GetActivitiesByTripIdAsync(TripId);
-        StateHasChanged();
     }
 }

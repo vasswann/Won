@@ -1,16 +1,15 @@
 ﻿@page "/activities/update/{ActivityId:int}"
 @using Won.Shared.Dtos
+@rendermode InteractiveServer
 
 @inject Won.Web.Services.Activities.ActivityService ActivityService
 @inject NavigationManager Navigation
 
 <PageTitle>Edit Activity</PageTitle>
 
-<h1 class="title is-2">
-    Edit Activity
-</h1>
+<h1 class="title is-2">Edit Activity</h1>
 
-@if (UpdatedActivity == null)
+@if (_isLoading)
 {
     <p>Loading activity...</p>
 }
@@ -18,46 +17,45 @@ else
 {
     <EditForm Model="UpdatedActivity" OnValidSubmit="UpdateActivity">
 
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
         <div class="box">
 
             <div class="field">
                 <label class="label">Activity Name</label>
-                <input class="input" type="text" @bind="UpdatedActivity.Name" />
+                <InputText class="input" @bind-Value="UpdatedActivity!.Name" />
             </div>
 
             <div class="field">
                 <label class="label">Cost</label>
-                <input class="input" type="number" @bind="UpdatedActivity.Cost" />
+                <InputNumber class="input" @bind-Value="UpdatedActivity!.Cost" />
             </div>
 
             <div class="field">
                 <label class="label">Group Size (Min)</label>
-                <input class="input" type="number" @bind="UpdatedActivity.MinimumGroupSize" />
+                <InputNumber class="input" @bind-Value="UpdatedActivity!.MinimumGroupSize" />
             </div>
 
             <div class="field">
                 <label class="label">Group Size (Max)</label>
-                <input class="input" type="number" @bind="UpdatedActivity.MaximumGroupSize" />
+                <InputNumber class="input" @bind-Value="UpdatedActivity!.MaximumGroupSize" />
             </div>
 
             <div class="field">
                 <label class="label">Date & Time</label>
-                <input class="input" type="datetime-local" @bind="UpdatedActivity.ActivityDateTime" @bind:format="yyyy-MM-ddTHH:mm" />
+                <InputDate class="input" @bind-Value="UpdatedActivity!.ActivityDateTime" />
             </div>
 
         </div>
         <div class="buttons">
 
             <button class="button is-warning" type="submit">
-
                 Save Changes
-
             </button>
 
             <NavLink href="@($"/trips/{_tripId}")" class="button is-light">
-
                 Cancel
-
             </NavLink>
 
         </div>
@@ -71,6 +69,7 @@ else
 
     private int _tripId;
     private UpdateActivityDto? UpdatedActivity;
+    private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,32 +77,36 @@ else
 
         if (activity == null)
         {
+            _isLoading = false;
             return;
         }
+
         _tripId = activity.TripId;
 
         UpdatedActivity = new UpdateActivityDto
-            {
-                Name = activity.Name,
-                Cost = activity.Cost,
-                WeatherDependency = activity.WeatherDependency,
-                EnergyIntensity = activity.EnergyIntensity,
-                MinimumGroupSize = activity.MinimumGroupSize,
-                MaximumGroupSize = activity.MaximumGroupSize,
-                ActivityDateTime = activity.ActivityDateTime
-            };
+        {
+            Name = activity.Name,
+            Cost = activity.Cost,
+            WeatherDependency = activity.WeatherDependency,
+            EnergyIntensity = activity.EnergyIntensity,
+            MinimumGroupSize = activity.MinimumGroupSize,
+            MaximumGroupSize = activity.MaximumGroupSize,
+            ActivityDateTime = activity.ActivityDateTime,
+            TripId = activity.TripId
+        };
+
+        _isLoading = false;
     }
 
     private async Task UpdateActivity()
     {
-        if (UpdatedActivity == null)
+        if (UpdatedActivity is null)
         {
             return;
         }
 
         var updated =
-            await ActivityService
-                .UpdateActivityAsync(ActivityId, UpdatedActivity);
+            await ActivityService.UpdateActivityAsync(ActivityId, UpdatedActivity);
 
         if (updated != null)
         {

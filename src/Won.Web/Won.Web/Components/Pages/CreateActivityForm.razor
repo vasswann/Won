@@ -1,4 +1,5 @@
 ﻿@page "/activities/create/{TripId:int}"
+@rendermode InteractiveServer
 @using Won.Shared.Dtos
 
 @inject Won.Web.Services.Activities.ActivityService ActivityService
@@ -6,41 +7,44 @@
 
 <PageTitle>Create Activity</PageTitle>
 
-<h1 class="title is-2">
-    Create Activity
-</h1>
+<h1 class="title is-2">Create Activity</h1>
 
 <p class="subtitle is-6">
     Add a new activity to your trip.
 </p>
 
-<EditForm Model="NewActivity" OnValidSubmit="CreateActivity" FormName="CreateActivityForm">
+<EditForm Model="NewActivity"
+          OnValidSubmit="CreateActivity"
+          FormName="CreateActivityForm">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
     <div class="box">
 
         <div class="field">
             <label class="label">Activity Name</label>
-            <input class="input" @bind="NewActivity.Name" />
+            <InputText class="input" @bind-Value="NewActivity.Name" />
         </div>
 
         <div class="field">
             <label class="label">Cost</label>
-            <input class="input" type="number" @bind="NewActivity.Cost" />
+            <InputNumber class="input" @bind-Value="NewActivity.Cost" />
         </div>
 
         <div class="field">
             <label class="label">Group Size (Min)</label>
-            <input class="input" type="number" @bind="NewActivity.MinimumGroupSize" />
+            <InputNumber class="input" @bind-Value="NewActivity.MinimumGroupSize" />
         </div>
 
         <div class="field">
             <label class="label">Group Size (Max)</label>
-            <input class="input" type="number" @bind="NewActivity.MaximumGroupSize" />
+            <InputNumber class="input" @bind-Value="NewActivity.MaximumGroupSize" />
         </div>
 
         <div class="field">
-            <label class="label">Date</label>
-            <input class="input" type="datetime-local" @bind="NewActivity.ActivityDateTime" />
+            <label class="label">Date & Time</label>
+            <InputDate class="input" Type="InputDateType.DateTimeLocal" @bind-Value="NewActivity.ActivityDateTime" />
         </div>
 
     </div>
@@ -50,7 +54,7 @@
             Create Activity
         </button>
 
-        <NavLink href="/trips" class="button is-light">
+        <NavLink href="@($"/trips/{TripId}")" class="button is-light">
             Cancel
         </NavLink>
     </div>
@@ -61,7 +65,7 @@
     [Parameter]
     public int TripId { get; set; }
 
-    private CreateActivityDto NewActivity = new CreateActivityDto();
+    private CreateActivityDto NewActivity = new();
 
     protected override void OnInitialized()
     {
@@ -72,9 +76,8 @@
     {
         var created = await ActivityService.CreateActivityAsync(NewActivity);
 
-        if (created != null)
+        if (created is not null)
         {
-            await Task.Delay(50);
             Navigation.NavigateTo($"/trips/{TripId}");
         }
     }
