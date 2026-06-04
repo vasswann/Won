@@ -4,7 +4,7 @@
 @using Won.Web.Components.Trips
 @using Won.Web.Services.Trips
 
-@inject TripsService TripService
+@inject FakeTripService FakeTripService
 
 <PageTitle>Trips</PageTitle>
 <div class="section">
@@ -27,7 +27,6 @@
                 {
                     <div class="column is-half">
                         <TripCard Trip="trip" />
-                        <NavLink class="button is-link is-small" href="@($"/trips/update/{trip.TripId}")">Update</NavLink>
                     </div>
                 }
             </div>
@@ -40,6 +39,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _trips = await TripService.GetTripsAsync();
+        _trips = await FakeTripService.GetTripsAsync();
     }
 }

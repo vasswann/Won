@@ -1,9 +1,34 @@
 ﻿@page "/dashboard"
+@using Won.Shared.Dtos
+@using Won.Web.Components.Trips
 
 <PageTitle>Dashboard</PageTitle>
 
 <h1 class="title is-2">Dashboard</h1>
 
 <p class="subtitle is-6">
-    Welcome to Won.
+    Welcome to your dashboard.
 </p>
+
+<div class="recent-trips">
+    <h3 class="title is-5">Recent Trips</h3>
+
+    @foreach (var trip in recentTrips)
+    {
+        <TripCard Trip="trip" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<TripListItemDto> Trips { get; set; } = [];
+
+    private IEnumerable<TripListItemDto> recentTrips = [];
+
+    protected override void OnParametersSet()
+    {
+        recentTrips = Trips
+            .OrderByDescending(t => t.StartDate)
+            .Take(5);
+    }
+}
