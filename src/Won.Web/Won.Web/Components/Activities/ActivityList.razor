@@ -1,0 +1,83 @@
+﻿@using Won.Shared.Dtos
+@inject Won.Web.Services.Activities.ActivityService ActivityService
+
+@if (Activities == null)
+{
+    <p>Loading activities...</p>
+}
+else if (!Activities.Any())
+{
+    <article class="message is-warning">
+        <div class="message-body">
+            No activities found for this trip.
+        </div>
+    </article>
+}
+else
+{
+    <div class="columns is-multiline">
+        @foreach (var activity in Activities)
+        {
+            <div class="column is-half">
+                <div class="box">
+
+                    <h2 class="title is-4">
+                        @activity.Name
+                    </h2>
+
+                    <p>
+                        <strong>Cost:</strong>
+                        @activity.Cost.ToString("C")
+                    </p>
+
+                    <p>
+                        <strong>Group Size:</strong>
+                        @activity.MinimumGroupSize -
+                        @activity.MaximumGroupSize
+                    </p>
+
+                    <p>
+                        <strong>Date:</strong>
+                        @activity.ActivityDateTime.ToString("dd MMM yyyy")
+                    </p>
+
+                    <p>
+                        <strong>Time:</strong>
+                        @activity.ActivityDateTime.ToString("HH:mm")
+                    </p>
+
+                    <div class="mt-4 buttons">
+
+                        <NavLink class="button is-link is-small" href="@($"/activities/update/{activity.ActivityId}")">
+
+                            Update
+
+                        </NavLink>
+
+                        <DeleteActivityButton ActivityId="@activity.ActivityId" OnDeleted="LoadActivities" />
+
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int TripId { get; set; }
+
+    private List<ActivityDto>? Activities;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadActivities();
+    }
+
+    private async Task LoadActivities()
+    {
+        Activities = await ActivityService.GetActivitiesByTripIdAsync(TripId);
+        StateHasChanged();
+    }
+}
