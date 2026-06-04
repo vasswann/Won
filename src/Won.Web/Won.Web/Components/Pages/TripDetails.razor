@@ -5,7 +5,7 @@
 @using Won.Web.Services.Trips
 @using Won.Web.Services.Weather
 
-@inject FakeTripService FakeTripService
+@inject TripsService TripsService
 @inject WeatherService WeatherService
 @inject LocationImageService LocationImageService
 
@@ -151,7 +151,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _trip = await FakeTripService.GetTripByIdAsync(TripId);
+        _trip = await TripsService.GetTripByIdAsync(TripId);
 
         if (_trip is null)
         {

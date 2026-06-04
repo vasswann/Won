@@ -24,11 +24,12 @@
 
 @code {
     [Parameter]
-    public IEnumerable<TripListItemDto> Trips { get; set; } = [];
+    public List<TripListItemDto> Trips { get; set; } = [];
 
-    private IEnumerable<TripListItemDto> RecentTrips =>
+    private List<TripListItemDto> RecentTrips =>
         Trips.OrderByDescending(t => t.StartDate)
-                .Take(3);
+                .Take(3)
+                .ToList();
     
     private void GoToTrips()
     {

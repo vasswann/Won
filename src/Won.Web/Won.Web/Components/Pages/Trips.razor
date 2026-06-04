@@ -4,7 +4,7 @@
 @using Won.Web.Components.Trips
 @using Won.Web.Services.Trips
 
-@inject FakeTripService FakeTripService
+@inject TripsService TripsService
 
 <PageTitle>Trips</PageTitle>
 <div class="section">
@@ -39,6 +39,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _trips = await FakeTripService.GetTripsAsync();
+        _trips = await TripsService.GetTripsAsync();
     }
 }

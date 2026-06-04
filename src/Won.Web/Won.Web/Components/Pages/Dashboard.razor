@@ -2,7 +2,7 @@
 @using Won.Shared.Dtos
 @using Won.Web.Components.Trips
 @using Won.Web.Services.Trips
-@inject FakeTripService FakeTripService
+@inject TripsService TripsService
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -26,6 +26,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        trips = await FakeTripService.GetTripsAsync();
+        trips = await TripsService.GetTripsAsync();
     }
 }
