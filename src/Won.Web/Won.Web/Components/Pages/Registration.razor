@@ -1,0 +1,103 @@
+﻿@page "/registration"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@using Won.Shared.Dtos
+@using System.Net.Http.Json
+
+<PageTitle>Register</PageTitle>
+
+<div class="container">
+    <h2>Register an account</h2>
+
+    <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+            <input class="input" type="text" @bind="username" placeholder="e.g Alex Smith">
+        </div> 
+    </div>
+
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+            <input class="input" type="email" @bind="email" placeholder="e.g. alexsmith@gmail.com">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" type="password" @bind="password" placeholder="Password" />
+        </div>
+    </div>
+
+    <div class="control">
+        <button class="button is-primary" @onclick="RegisterUser">Register</button>
+    </div>
+
+    <div class="control">
+        <button class="button is-primary" href="/">Cancel</button>
+    </div>
+</div>
+
+@if (errors.Length > 0)
+{
+    <ul>
+        @foreach (var error in errors)
+        {
+            <li class="has-text-danger">@error</li>
+        }
+    </ul>
+}
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <p class="has-text-success">@successMessage</p>
+}
+
+@code {
+    private string email = "";
+    private string username = "";
+    private string password = "";
+    private string[] errors = [];
+    private string successMessage = "";
+
+    public async Task RegisterUser()
+    {
+        try
+        {
+            var request = new RegisterRequestDto
+                {
+                    FirstName = username,
+                    LastName = "",
+                    Email = email,
+                    Password = password
+                };
+
+            
+            var response =
+                await Http.PostAsJsonAsync(
+                    "api/auth/register",
+                    request
+                );
+
+            if(response.IsSuccessStatusCode)
+            {
+                successMessage = "Registration successful!";
+                errors = [];
+            }
+            else
+            {
+                errors = [$"Status code: {response.StatusCode}"];
+            }
+        }
+        catch (Exception ex)
+        {
+            errors = [ex.ToString()];
+        }
+
+
+
+    }
+
+}
+

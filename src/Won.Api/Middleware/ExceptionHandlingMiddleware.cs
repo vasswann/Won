@@ -44,7 +44,7 @@ public class ExceptionHandlingMiddleware
                 StatusCode = context.Response.StatusCode,
                 Message = ex.Message,
                 Data = null,
-                Errors = new List<string> { ex.Message }
+                Errors = new List<string> { ex.InnerException?.Message ?? ex.Message }
             };
 
             var json = JsonSerializer.Serialize(response);

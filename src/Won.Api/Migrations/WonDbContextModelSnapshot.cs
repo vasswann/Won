@@ -22,6 +22,57 @@ namespace Won.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Won.Api.Entities.Activity", b =>
+                {
+                    b.Property<int>("ActivityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActivityId"));
+
+                    b.Property<DateTime>("ActivityDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EnergyIntensity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaximumGroupSize")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinimumGroupSize")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("TripId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeatherDependency")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActivityId");
+
+                    b.HasIndex("TripId");
+
+                    b.ToTable("Activities", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Activities_EnergyIntensity", "\"EnergyIntensity\" >= 1 AND \"EnergyIntensity\" <= 10");
+
+                            t.HasCheckConstraint("CK_Activities_GroupSize", "\"MinimumGroupSize\" <= \"MaximumGroupSize\"");
+
+                            t.HasCheckConstraint("CK_Activities_WeatherDependency", "\"WeatherDependency\" >= 1 AND \"WeatherDependency\" <= 10");
+                        });
+                });
+
             modelBuilder.Entity("Won.Api.Entities.Trip", b =>
                 {
                     b.Property<int>("TripId")
@@ -101,6 +152,17 @@ namespace Won.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Won.Api.Entities.Activity", b =>
+                {
+                    b.HasOne("Won.Api.Entities.Trip", "Trip")
+                        .WithMany()
+                        .HasForeignKey("TripId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Trip");
                 });
 #pragma warning restore 612, 618
         }

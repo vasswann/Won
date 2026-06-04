@@ -1,0 +1,198 @@
+﻿@page "/trips/{TripId:int}"
+
+@using Won.Shared.Dtos
+@using Won.Web.Services.Locations
+@using Won.Web.Services.Trips
+@using Won.Web.Services.Weather
+
+@inject FakeTripService TripService
+@inject WeatherService WeatherService
+@inject LocationImageService LocationImageService
+
+<PageTitle>Trip Details</PageTitle>
+
+@if (_trip is null)
+{
+    <article class="message is-warning">
+        <div class="message-body">
+            Trip not found.
+        </div>
+    </article>
+}
+else
+{
+    <div class="columns is-vcentered mb-6">
+        <div class="column is-half">
+            @if (!string.IsNullOrWhiteSpace(_locationImage?.ImageUrl))
+            {
+                <figure class="image is-4by3">
+                    <img src="@_locationImage.ImageUrl"
+                         alt="@_trip.Location">
+                </figure>
+            }
+            else
+            {
+                <div class="box has-text-centered">
+                    <p class="title is-1">W</p>
+                    <p>No image available for this location.</p>
+                </div>
+            }
+        </div>
+
+        <div class="column is-half">
+            <h1 class="title is-2">@_trip.Name</h1>
+
+            <p class="subtitle is-5">
+                @_trip.Location
+            </p>
+
+            @if (!string.IsNullOrWhiteSpace(_locationImage?.Extract))
+            {
+                <p>
+                    @_locationImage.Extract
+                </p>
+            }
+            else
+            {
+                <p>
+                    @_trip.Details
+                </p>
+            }
+        </div>
+    </div>
+
+    <article class="message is-info">
+        <div class="message-header">
+            <p>Weather forecast</p>
+        </div>
+
+        <div class="message-body">
+            @if (!_isWeatherAvailable)
+            {
+                <p>
+                    Weather forecast is not available yet for this trip.
+                    Forecast data is only shown when the trip starts within the next 14 days.
+                </p>
+            }
+            else if (_isWeatherLoading)
+            {
+                <p>Loading weather forecast...</p>
+            }
+            else if (_weatherForecast.Count == 0)
+            {
+                <p>Weather forecast could not be found for this location.</p>
+            }
+            else
+            {
+                <div class="columns is-multiline">
+                    @foreach (var day in _weatherForecast)
+                    {
+                        <div class="column is-one-quarter">
+                            <div class="box has-text-centered">
+                                <p class="has-text-weight-semibold">
+                                    @day.Date.ToString("dd MMM")
+                                </p>
+
+                                <p class="is-size-2">
+                                    @day.Icon
+                                </p>
+
+                                <p class="has-text-weight-semibold">
+                                    @day.Description
+                                </p>
+
+                                <p>
+                                    @day.MinTemperature°C - @day.MaxTemperature°C
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </article>
+
+    <div class="box">
+        <p>
+            <strong>Dates:</strong>
+            @_trip.StartDate.ToString("dd MMM yyyy") - @_trip.EndDate.ToString("dd MMM yyyy")
+        </p>
+
+        <p>
+            <strong>Budget:</strong>
+            @_trip.Budget.ToString("C")
+        </p>
+
+        <p>
+            <strong>Group size:</strong>
+            @_trip.GroupSize
+        </p>
+
+        <p>
+            <strong>Details:</strong>
+            @_trip.Details
+        </p>
+    </div>
+
+    <NavLink href="/trips" class="button is-light">
+        Back to Trips
+    </NavLink>
+}
+
+@code {
+    [Parameter]
+    public int TripId { get; set; }
+
+    private TripDto? _trip;
+    private List<WeatherForecastDto> _weatherForecast = [];
+    private bool _isWeatherAvailable;
+    private bool _isWeatherLoading;
+    private LocationImageDto? _locationImage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _trip = await TripService.GetTripByIdAsync(TripId);
+
+        if (_trip is null)
+        {
+            return;
+        }
+
+        _locationImage = await LocationImageService.GetLocationImageAsync(_trip.Location);
+
+        if (_locationImage is null)
+        {
+            return;
+        }
+
+        await LoadWeatherAsync();
+    }
+
+    private async Task LoadWeatherAsync()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var forecastEnd = today.AddDays(13);
+
+        var tripStart = DateOnly.FromDateTime(_trip!.StartDate);
+        var tripEnd = DateOnly.FromDateTime(_trip.EndDate);
+
+        var weatherStart = tripStart > today ? tripStart : today;
+        var weatherEnd = tripEnd < forecastEnd ? tripEnd : forecastEnd;
+
+        _isWeatherAvailable = weatherStart <= weatherEnd;
+
+        if (!_isWeatherAvailable)
+        {
+            return;
+        }
+
+        _isWeatherLoading = true;
+
+        _weatherForecast = await WeatherService.GetWeatherForecastAsync(
+            _trip.Location,
+            weatherStart,
+            weatherEnd);
+
+        _isWeatherLoading = false;
+    }
+}
