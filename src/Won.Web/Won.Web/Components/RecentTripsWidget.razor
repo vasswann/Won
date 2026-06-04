@@ -9,9 +9,9 @@
         <a class="is-size-7" href="/trips">View all</a>
     </div>
 
-    @if (Trips is null || !Trips.Any())
+    @if (RecentTrips.Count == 0)
     {
-        <p class="has-text-grey is-size-7">No trips found.</p>
+        <p class="has-text-grey is-size-7">No previous trips found.</p>
     }
     else
     {
@@ -27,7 +27,8 @@
     public List<TripListItemDto> Trips { get; set; } = [];
 
     private List<TripListItemDto> RecentTrips =>
-        Trips.OrderByDescending(t => t.StartDate)
+        Trips.Where(t => t.EndDate < DateTime.UtcNow)
+                .OrderByDescending(t => t.StartDate)
                 .Take(5)
                 .ToList();
     
