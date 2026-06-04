@@ -41,5 +41,54 @@ namespace Won.Web.Services.Trips
 
             return response?.Data;
         }
+
+        public async Task<TripDto?> CreateTripAsync(CreateTripDto tripData)
+        {
+            var response =
+                await _httpClient.PostAsJsonAsync(
+                    "api/Trips",
+                    tripData);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var apiResponse =
+                await response.Content.ReadFromJsonAsync<ApiResponse<TripDto>>();
+
+            return apiResponse?.Data;
+        }
+
+        public async Task<TripDto?> UpdateTripAsync(
+            int tripId, 
+            UpdateTripDto tripData)
+        {
+            var response =
+                await _httpClient.PatchAsJsonAsync(
+                    $"api/Trips/{tripId}",
+                    tripData);
+
+            if(!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var apiResponse =
+                await response.Content.ReadFromJsonAsync<ApiResponse<TripDto>>();
+
+            return apiResponse?.Data;
+        }
+
+        public async Task<bool> DeleteTripAsync(int tripId)
+        {
+            var response =
+                await _httpClient.DeleteAsync(
+                    $"api/Trips/{tripId}");
+
+                return response.IsSuccessStatusCode;
+
+       
+        }
     }
 }

@@ -1,7 +1,8 @@
 ﻿@page "/trips/update/{id:int}"
 @using Won.Shared.Dtos
 @rendermode InteractiveServer
-@inject HttpClient http
+@using Won.Web.Services.Trips
+@inject TripsService TripsService
 @inject NavigationManager Navigation
 
 <h3>Edit Your Trip</h3>
@@ -24,7 +25,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await http.GetFromJsonAsync<TripDto>($"api/trips/{id}");
+        var result = await TripsService.GetTripByIdAsync(id);
 
         if (result != null)
         {
@@ -36,9 +37,20 @@ else
 
     private async Task UpdateTrip(TripDto trip)
     {
-        var response = await http.PutAsJsonAsync($"api/trips/{id}", trip);
+        var updateTrip = new UpdateTripDto
+            {
+                Name = trip.Name,
+                StartDate = trip.StartDate,
+                EndDate = trip.EndDate,
+                Location = trip.Location,
+                Details = trip.Details,
+                Budget = trip.Budget,
+                GroupSize = trip.GroupSize
+            };
+        var updatedTrip =
+            await TripsService.UpdateTripAsync(id, updateTrip);
 
-        if (response.IsSuccessStatusCode)
+        if (updatedTrip is not null)
         {
             Navigation.NavigateTo("/trips");
         }
