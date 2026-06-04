@@ -9,7 +9,11 @@
 <TripForm MyTrip="_trip" OnSubmit="@CreateTrip" />
 
 @code{
-    private TripDto _trip = new();
+    private TripDto _trip = new()
+    {
+        StartDate = DateTime.Today,
+        EndDate = DateTime.Today.AddDays(1)
+    };
 
     private async Task CreateTrip(TripDto trip)
     {
