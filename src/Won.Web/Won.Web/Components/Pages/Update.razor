@@ -1,0 +1,46 @@
+﻿@page "/trips/update/{id:int}"
+@using Won.Shared.Dtos
+@rendermode InteractiveServer
+@inject HttpClient http
+@inject NavigationManager Navigation
+
+<h3>Edit Your Trip</h3>
+
+@if (_isLoading)
+{
+    <p>Loading trip...</p>
+}
+else
+{
+    <TripForm MyTrip="_trip" OnSubmit="@UpdateTrip" />
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    private TripDto _trip = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await http.GetFromJsonAsync<TripDto>($"api/trips/{id}");
+
+        if (result != null)
+        {
+            _trip = result;
+        }
+
+        _isLoading = false;
+    }
+
+    private async Task UpdateTrip(TripDto trip)
+    {
+        var response = await http.PutAsJsonAsync($"api/trips/{id}", trip);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/trips");
+        }
+    }
+}
