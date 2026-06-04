@@ -59,6 +59,7 @@ builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 builder.Services.AddScoped<IActivityRecommendationService, ActivityRecommendationService>();
+builder.Services.AddHttpClient<IAiActivitySuggestionService, GeminiActivitySuggestionService>();
 
 //Dependency Injection for AuthService to create a passwordhash
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
