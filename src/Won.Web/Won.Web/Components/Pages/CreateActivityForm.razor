@@ -1,0 +1,81 @@
+﻿@page "/activities/create/{TripId:int}"
+@using Won.Shared.Dtos
+
+@inject Won.Web.Services.Activities.ActivityService ActivityService
+@inject NavigationManager Navigation
+
+<PageTitle>Create Activity</PageTitle>
+
+<h1 class="title is-2">
+    Create Activity
+</h1>
+
+<p class="subtitle is-6">
+    Add a new activity to your trip.
+</p>
+
+<EditForm Model="NewActivity" OnValidSubmit="CreateActivity" FormName="CreateActivityForm">
+
+    <div class="box">
+
+        <div class="field">
+            <label class="label">Activity Name</label>
+            <input class="input" @bind="NewActivity.Name" />
+        </div>
+
+        <div class="field">
+            <label class="label">Cost</label>
+            <input class="input" type="number" @bind="NewActivity.Cost" />
+        </div>
+
+        <div class="field">
+            <label class="label">Group Size (Min)</label>
+            <input class="input" type="number" @bind="NewActivity.MinimumGroupSize" />
+        </div>
+
+        <div class="field">
+            <label class="label">Group Size (Max)</label>
+            <input class="input" type="number" @bind="NewActivity.MaximumGroupSize" />
+        </div>
+
+        <div class="field">
+            <label class="label">Date</label>
+            <input class="input" type="datetime-local" @bind="NewActivity.ActivityDateTime" />
+        </div>
+
+    </div>
+
+    <div class="buttons">
+        <button class="button is-primary" type="submit">
+            Create Activity
+        </button>
+
+        <NavLink href="/trips" class="button is-light">
+            Cancel
+        </NavLink>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int TripId { get; set; }
+
+    private CreateActivityDto NewActivity = new CreateActivityDto();
+
+    protected override void OnInitialized()
+    {
+        NewActivity.TripId = TripId;
+    }
+
+    private async Task CreateActivity()
+    {
+        var created = await ActivityService.CreateActivityAsync(NewActivity);
+
+        if (created != null)
+        {
+            await Task.Delay(50);
+            Navigation.NavigateTo($"/trips/{TripId}");
+        }
+    }
+}
