@@ -1,0 +1,113 @@
+﻿@page "/activities/update/{ActivityId:int}"
+@using Won.Shared.Dtos
+
+@inject Won.Web.Services.Activities.ActivityService ActivityService
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Activity</PageTitle>
+
+<h1 class="title is-2">
+    Edit Activity
+</h1>
+
+@if (UpdatedActivity == null)
+{
+    <p>Loading activity...</p>
+}
+else
+{
+    <EditForm Model="UpdatedActivity" OnValidSubmit="UpdateActivity">
+
+        <div class="box">
+
+            <div class="field">
+                <label class="label">Activity Name</label>
+                <input class="input" type="text" @bind="UpdatedActivity.Name" />
+            </div>
+
+            <div class="field">
+                <label class="label">Cost</label>
+                <input class="input" type="number" @bind="UpdatedActivity.Cost" />
+            </div>
+
+            <div class="field">
+                <label class="label">Group Size (Min)</label>
+                <input class="input" type="number" @bind="UpdatedActivity.MinimumGroupSize" />
+            </div>
+
+            <div class="field">
+                <label class="label">Group Size (Max)</label>
+                <input class="input" type="number" @bind="UpdatedActivity.MaximumGroupSize" />
+            </div>
+
+            <div class="field">
+                <label class="label">Date & Time</label>
+                <input class="input" type="datetime-local" @bind="UpdatedActivity.ActivityDateTime" @bind:format="yyyy-MM-ddTHH:mm" />
+            </div>
+
+        </div>
+        <div class="buttons">
+
+            <button class="button is-warning" type="submit">
+
+                Save Changes
+
+            </button>
+
+            <NavLink href="@($"/trips/{_tripId}")" class="button is-light">
+
+                Cancel
+
+            </NavLink>
+
+        </div>
+
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int ActivityId { get; set; }
+
+    private int _tripId;
+    private UpdateActivityDto? UpdatedActivity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var activity = await ActivityService.GetActivityByIdAsync(ActivityId);
+
+        if (activity == null)
+        {
+            return;
+        }
+        _tripId = activity.TripId;
+
+        UpdatedActivity = new UpdateActivityDto
+            {
+                Name = activity.Name,
+                Cost = activity.Cost,
+                WeatherDependency = activity.WeatherDependency,
+                EnergyIntensity = activity.EnergyIntensity,
+                MinimumGroupSize = activity.MinimumGroupSize,
+                MaximumGroupSize = activity.MaximumGroupSize,
+                ActivityDateTime = activity.ActivityDateTime
+            };
+    }
+
+    private async Task UpdateActivity()
+    {
+        if (UpdatedActivity == null)
+        {
+            return;
+        }
+
+        var updated =
+            await ActivityService
+                .UpdateActivityAsync(ActivityId, UpdatedActivity);
+
+        if (updated != null)
+        {
+            Navigation.NavigateTo($"/trips/{_tripId}");
+        }
+    }
+}
