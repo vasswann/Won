@@ -17,7 +17,9 @@
     {
         @foreach (var trip in RecentTrips)
         {
-            <TripCard Trip="trip" />
+            <div class="trip-item">
+                <TripCard Trip="trip" />
+            </div>
         }
     }
 </div>

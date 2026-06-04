@@ -34,3 +34,7 @@
     align-self: start;
     background-color: turquoise;
 }
+
+.recent-trips-widget .trip-item {
+    border: 1px solid #000;
+}
