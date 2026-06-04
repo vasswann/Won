@@ -6,6 +6,9 @@ using Won.Web.Services.Weather;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped(sp =>
     new HttpClient
@@ -14,12 +17,10 @@ builder.Services.AddScoped(sp =>
     });
 
 builder.Services.AddScoped<FakeTripService>();
+builder.Services.AddScoped<TripsService>();
+
 builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<LocationImageService>();
-
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
 
 var app = builder.Build();
 
