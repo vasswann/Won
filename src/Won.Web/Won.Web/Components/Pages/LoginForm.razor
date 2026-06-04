@@ -1,9 +1,4 @@
-﻿@* @page "/login" *@
-@* @layout AuthLayout *@
-@* @using Won.Web.Components.Layout *@
-@using System.ComponentModel.DataAnnotations
-
-<div class="container">
+﻿@using System.ComponentModel.DataAnnotations
 
     <LogoSquare />
 
@@ -57,7 +52,7 @@
             </NavLink>
         </p>
     </EditForm>
-</div>
+
 
 @code {
     private readonly LoginModel _model = new();

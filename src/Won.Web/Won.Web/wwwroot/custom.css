@@ -2,7 +2,6 @@
    Custom Styles
    ========================================================================== */
 
-/* TEMP STYLES -  NEED TO CLEAN UP MENU BELOW!! */
 .navbar-logo .logo-square {
     border-radius: 1rem;
     margin-bottom: 0;
@@ -12,6 +11,10 @@
 /* Apply Bulma's side-menu active styles to Blazor's active NavLinks */
 .sidebar {
     background-image: linear-gradient(130deg, rgb(2 43 119) 0%, #4b6083 80%) !important;
+}
+
+.app-sidebar > div:first-child {
+    min-height: 100vh;
 }
 
 .menu-label {
@@ -28,14 +31,20 @@
     background-color: hsla(var(--bulma-text-h), var(--bulma-text-s), var(--bulma-text-l), .9);
 }
 
-.menu-list a.active {
+.menu-list a.active,
+.menu-list a.is-active {
     background-color: var(--bulma-menu-item-active-background-color, #3298dc);
     color: var(--bulma-menu-item-active-color, #fff);
 }
 
-.menu-list .menu-item:hover, .menu-list a:hover, .menu-list button:hover {
+.menu-list .menu-item:hover, 
+.menu-list a:hover, 
+.menu-list button:hover  {
     color: hsl(218 17% 42% / 1);
-    background-color: hsla(var(--bulma-text-h), var(--bulma-text-s), var(--bulma-text-l), .9);
-    background-color: #f7f7f8;
-    background-color: aliceblue;
+    background-color: #f0f8ff;
+}
+
+/* Helper Classes */
+.has-radius-1rem {
+    border-radius: 1rem !important;
 }
