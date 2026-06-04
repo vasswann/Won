@@ -1,0 +1,41 @@
+﻿@page "/trips"
+
+@using Won.Shared.Dtos
+@using Won.Web.Components.Trips
+@using Won.Web.Services.Trips
+
+@inject TripsService TripService
+
+<PageTitle>Trips</PageTitle>
+
+<h1 class="title is-2">Trips</h1>
+
+<p class="subtitle is-6">
+    View your planned trips.
+</p>
+
+@if (_trips is null)
+{
+    <p>Loading trips...</p>
+}
+else
+{
+    <div class="columns is-multiline">
+        @foreach (var trip in _trips)
+        {
+            <div class="column is-half">
+                <TripCard Trip="trip" />
+                <NavLink class="button is-link is-small" href="@($"/trips/update/{trip.TripId}")">Update</NavLink>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<TripListItemDto>? _trips;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _trips = await TripService.GetTripsAsync();
+    }
+}

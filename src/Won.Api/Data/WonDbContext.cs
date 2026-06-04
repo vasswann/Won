@@ -66,6 +66,9 @@ public class WonDbContext : DbContext
 
             entity.Property(x => x.Budget)
                 .HasColumnType("decimal(18,2)");
+
+            entity.Property(x => x.CreatedAt)
+                .IsRequired();
         });
 
         modelBuilder.Entity<Activity>(entity =>
