@@ -9,11 +9,14 @@
 @using Won.Web.Services.Trips
 @using Won.Web.Services.Weather
 @using Won.Web.Services.Activities
+@using Won.Web.Services.Notifications
 
 @inject TripsService TripsService
 @inject WeatherService WeatherService
 @inject LocationImageService LocationImageService
 @inject ActivitySuggestionService ActivitySuggestionService
+@inject NotificationService NotificationService
+@inject NavigationManager Navigation
 
 <PageTitle>Trip Details</PageTitle>
 
@@ -165,11 +168,12 @@ else
                 Back to Trips
             </NavLink>
 
-            <NavLink href="@($"/trips/edit/{_trip.TripId}")" class="button is-info">
+            <NavLink href="@($"/trips/update/{_trip.TripId}")" class="button is-info">
                 Edit Trip
             </NavLink>
 
-            <button class="button is-danger">
+            <button class="button is-danger"
+                    @onclick="DeleteTripAsync">
                 Delete Trip
             </button>
         </div>
@@ -275,29 +279,75 @@ else
 
     private async Task GenerateActivitySuggestionsAsync()
     {
-        if(_trip is null)
+        if (_trip is null)
         {
+            NotificationService.ShowError("Trip details could not be found.");
             return;
         }
 
-        _isGeneratingSuggestions = true;
-
-        var request = new ActivitySuggestionRequestDto
+        try
         {
-            Location = _trip.Location,
-            StartDate = _trip.StartDate,
-            EndDate = _trip.EndDate,
-            Budget = _trip.Budget,
-            GroupSize = _trip.GroupSize
-        };
+            _isGeneratingSuggestions = true;
 
-        var response = await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+            var request = new ActivitySuggestionRequestDto
+            {
+                Location = _trip.Location,
+                StartDate = _trip.StartDate,
+                EndDate = _trip.EndDate,
+                Budget = _trip.Budget,
+                GroupSize = _trip.GroupSize
+            };
 
-        if(response.Success)
+            var response =
+                await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+
+            if (response.Success)
+            {
+                _activitySuggestions = response.Data ?? [];
+                NotificationService.ShowSuccess(response.Message);
+            }
+            else
+            {
+                NotificationService.ShowError(response.Message);
+            }
+        }
+        catch
         {
-            _activitySuggestions = response.Data ?? [];
+            NotificationService.ShowError(
+                "Something went wrong while generating activity suggestions.");
+        }
+        finally
+        {
+            _isGeneratingSuggestions = false;
+        }
+    }
+
+    private async Task DeleteTripAsync()
+    {
+        if (_trip is null)
+        {
+            NotificationService.ShowError("Trip details could not be found.");
+            return;
         }
 
-        _isGeneratingSuggestions = false;
+        try
+        {
+            var response =
+                await TripsService.DeleteTripAsync(_trip.TripId);
+
+            if (response.Success)
+            {
+                NotificationService.ShowSuccess(response.Message);
+                Navigation.NavigateTo("/trips");
+                return;
+            }
+
+            NotificationService.ShowError(response.Message);
+        }
+        catch
+        {
+            NotificationService.ShowError(
+                "Something went wrong while deleting the trip.");
+        }
     }
 }

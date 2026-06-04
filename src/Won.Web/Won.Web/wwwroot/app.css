@@ -41,9 +41,9 @@ a, .btn-link {
 .notification-container {
     position: fixed;
     top: 1rem;
+    left: 18rem; 
     right: 1rem;
-    z-index: 1000;
-    width: min(420px, calc(100% - 2rem));
+    z-index: 9999;
 }
 
     .notification-container .notification {

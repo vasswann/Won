@@ -1,23 +1,53 @@
 ﻿@page "/trips/create"
-@using Won.Shared.Dtos
 @rendermode InteractiveServer
-@inject HttpClient http
+
+@using Won.Shared.Dtos
+@using Won.Web.Services.Notifications
+@using Won.Web.Services.Trips
+
+@inject TripsService TripsService
 @inject NavigationManager Navigation
+@inject NotificationService NotificationService
 
 <h3>Plan your next trip!</h3>
 
 <TripForm MyTrip="_trip" OnSubmit="@CreateTrip" />
 
-@code{
+@code {
     private TripDto _trip = new();
 
     private async Task CreateTrip(TripDto trip)
     {
-        var response = await http.PostAsJsonAsync("api/trips", trip);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Navigation.NavigateTo("/trips");
+            var request = new CreateTripDto
+            {
+                Name = trip.Name,
+                StartDate = trip.StartDate,
+                EndDate = trip.EndDate,
+                Location = trip.Location,
+                Details = trip.Details,
+                Budget = trip.Budget,
+                GroupSize = trip.GroupSize
+            };
+
+            var response = await TripsService.CreateTripAsync(request);
+
+            if (response.Success)
+            {
+                NotificationService.ShowSuccess(response.Message);
+
+                await Task.Delay(5000);
+
+                Navigation.NavigateTo("/trips");
+                return;
+            }
+
+            NotificationService.ShowError(response.Message);
+        }
+        catch
+        {
+            NotificationService.ShowError("Something went wrong while creating the trip.");
         }
     }
 }

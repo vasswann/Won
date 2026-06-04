@@ -1,9 +1,13 @@
 ﻿@page "/trips/update/{id:int}"
 @using Won.Shared.Dtos
-@rendermode InteractiveServer
 @using Won.Web.Services.Trips
+@using Won.Web.Services.Notifications
+
+@rendermode InteractiveServer
+
 @inject TripsService TripsService
 @inject NavigationManager Navigation
+@inject NotificationService NotificationService
 
 <h3>Edit Your Trip</h3>
 
@@ -37,7 +41,9 @@ else
 
     private async Task UpdateTrip(TripDto trip)
     {
-        var updateTrip = new UpdateTripDto
+        try
+        {
+            var updateTrip = new UpdateTripDto
             {
                 Name = trip.Name,
                 StartDate = trip.StartDate,
@@ -47,12 +53,22 @@ else
                 Budget = trip.Budget,
                 GroupSize = trip.GroupSize
             };
-        var updatedTrip =
-            await TripsService.UpdateTripAsync(id, updateTrip);
 
-        if (updatedTrip is not null)
+            var response = await TripsService.UpdateTripAsync(id, updateTrip);
+
+            if (response.Success)
+            {
+                NotificationService.ShowSuccess(response.Message);
+                Navigation.NavigateTo("/trips");
+                return;
+            }
+
+            NotificationService.ShowError(response.Message);
+        }
+        catch
         {
-            Navigation.NavigateTo("/trips");
+            NotificationService.ShowError(
+                "Something went wrong while updating the trip.");
         }
     }
 }
