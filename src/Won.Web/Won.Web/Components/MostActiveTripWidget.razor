@@ -37,7 +37,6 @@
                     }
                 </ol>
             </div>
-
         }
     }
 </div>
@@ -50,8 +49,7 @@
     private bool isLoading = true;
 
     private List<TripListItemDto> TopActiveTrips =>
-        Trips
-            .Where(trip => activitiesByTrip.ContainsKey(trip.TripId))
+        Trips.Where(trip => activitiesByTrip.ContainsKey(trip.TripId))
             .OrderByDescending(trip => activitiesByTrip[trip.TripId].Count)
             .Take(3)
             .ToList();
@@ -62,10 +60,8 @@
 
         isLoading = true;
 
-        var trips = Trips.ToDictionary(
-            trip => trip.TripId,
-            trip => ActivityService.GetActivitiesByTripIdAsync(trip.TripId)
-        );
+        var trips = Trips.ToDictionary(trip => trip.TripId, trip => ActivityService
+                        .GetActivitiesByTripIdAsync(trip.TripId));
 
         var results = await Task.WhenAll(trips.Values);
 
