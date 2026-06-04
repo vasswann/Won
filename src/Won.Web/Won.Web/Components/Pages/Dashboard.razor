@@ -1,34 +1,27 @@
 ﻿@page "/dashboard"
 @using Won.Shared.Dtos
 @using Won.Web.Components.Trips
+@using Won.Web.Services.Trips
+@inject FakeTripService FakeTripService
 
 <PageTitle>Dashboard</PageTitle>
 
 <h1 class="title is-2">Dashboard</h1>
 
-<p class="subtitle is-6">
-    Welcome to your dashboard.
-</p>
-
-<div class="recent-trips">
-    <h3 class="title is-5">Recent Trips</h3>
-
-    @foreach (var trip in recentTrips)
-    {
-        <TripCard Trip="trip" />
-    }
-</div>
+@if (trips is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <RecentTripsWidget Trips="trips" />
+}
 
 @code {
-    [Parameter]
-    public IEnumerable<TripListItemDto> Trips { get; set; } = [];
+    private List<TripListItemDto>? trips;
 
-    private IEnumerable<TripListItemDto> recentTrips = [];
-
-    protected override void OnParametersSet()
+    protected override async Task OnInitializedAsync()
     {
-        recentTrips = Trips
-            .OrderByDescending(t => t.StartDate)
-            .Take(5);
+        trips = await FakeTripService.GetTripsAsync();
     }
 }

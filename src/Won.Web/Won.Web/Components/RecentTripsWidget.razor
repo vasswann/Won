@@ -1,0 +1,37 @@
+﻿@using Won.Shared.Dtos
+@using Won.Web.Components.Trips
+@inject NavigationManager Navigation
+
+<div class="box recent-trips-widget">
+    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+        <h3 class="title is-4 mb-0">Recent Trips</h3>
+
+        <a class="is-size-7" href="/trips">View all</a>
+    </div>
+
+    @if (Trips is null || !Trips.Any())
+    {
+        <p class="has-text-grey is-size-7">No trips found.</p>
+    }
+    else
+    {
+        @foreach (var trip in RecentTrips)
+        {
+            <TripCard Trip="trip" />
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<TripListItemDto> Trips { get; set; } = [];
+
+    private IEnumerable<TripListItemDto> RecentTrips =>
+        Trips.OrderByDescending(t => t.StartDate)
+                .Take(3);
+    
+    private void GoToTrips()
+    {
+        Navigation.NavigateTo("/trips");
+    }
+}

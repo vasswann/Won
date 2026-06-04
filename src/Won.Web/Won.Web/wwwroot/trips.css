@@ -4,7 +4,7 @@
     color: white;
 }
 
-.trip-page-container .card-content {
+.trip-page-container .card-content{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -17,10 +17,20 @@
     margin-bottom: 20px;
 }
 
+.card-content:hover{
+    background-color: darkturquoise !important;
+}
+
 .trip-form-container .box{
     border: 2px solid black;
 }
 
 #create-trip-button {
     margin-bottom: 24px !important;
+}
+
+.recent-trips-widget {
+    max-width: 400px;
+    align-self: start;
+    background-color: turquoise;
 }
