@@ -1,0 +1,81 @@
+﻿@using Won.Shared.Dtos
+@using Won.Web.Components.Trips
+@using Won.Web.Services.Activities
+@inject ActivityService ActivityService
+@inject NavigationManager Navigation
+
+<div class="box most-active-trips-widget">
+    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+        <h3 class="title is-4 mb-0">3 Most Active Trips</h3>
+    </div>
+
+    @if (isLoading)
+    {
+        <p class="has-text-grey is-size-7">Loading activities...</p>
+    }
+    else if (TopActiveTrips.Count == 0)
+    {
+        <p class="has-text-grey is-size-7">No trips found.</p>
+    }
+    else
+    {
+        @foreach (var trip in TopActiveTrips)
+        {
+            <TripCard Trip="trip" />
+
+            <p class="is-size-6 has-text-black ml-2">
+                <strong>Activities:</strong>
+            </p>
+
+            <div class="ml-3">
+                <ol>
+                    @foreach (var activity in activitiesByTrip[trip.TripId])
+                    {
+                        <li class="is-size-6 has-text-black">
+                            @activity.Name
+                        </li>
+                    }
+                </ol>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<TripListItemDto> Trips { get; set; } = [];
+
+    private Dictionary<int, List<ActivityDto>> activitiesByTrip = new();
+    private bool isLoading = true;
+
+    private List<TripListItemDto> TopActiveTrips =>
+        Trips.Where(trip => activitiesByTrip.ContainsKey(trip.TripId))
+            .OrderByDescending(trip => activitiesByTrip[trip.TripId].Count)
+            .Take(3)
+            .ToList();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Trips == null || Trips.Count == 0)return;
+
+        isLoading = true;
+
+        var trips = Trips.ToDictionary(trip => trip.TripId, trip => ActivityService
+                        .GetActivitiesByTripIdAsync(trip.TripId));
+
+        var results = await Task.WhenAll(trips.Values);
+
+        int i = 0;
+        foreach (var tripId in trips.Keys)
+        {
+            activitiesByTrip[tripId] = results[i];
+            i++;
+        }
+
+        isLoading = false;
+    }
+    private void GoToTrips(int tripId)
+    {
+        Navigation.NavigateTo($"/trips/{tripId}");
+    }
+}
