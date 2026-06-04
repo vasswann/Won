@@ -28,7 +28,7 @@
 
     private List<TripListItemDto> RecentTrips =>
         Trips.OrderByDescending(t => t.StartDate)
-                .Take(3)
+                .Take(5)
                 .ToList();
     
     private void GoToTrips()
