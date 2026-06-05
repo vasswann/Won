@@ -5,30 +5,36 @@ namespace Won.Web.Services.Activities
 {
     public class ActivityService
     {
-        private readonly HttpClient _http;
+        private readonly HttpClient _httpClient;
 
-        public ActivityService(HttpClient http)
+        public ActivityService(HttpClient httpClient)
         {
-            _http = http;
+            _httpClient = httpClient;
         }
 
         public async Task<List<ActivityDto>> GetActivitiesByTripIdAsync(int tripId)
         {
-            var response = await _http.GetFromJsonAsync<ApiResponse<List<ActivityDto>>>($"api/activities/trip/{tripId}");
+            var response =
+                await _httpClient.GetFromJsonAsync<ApiResponse<List<ActivityDto>>>($"api/activities/trip/{tripId}");
 
-            return response?.Data ?? new List<ActivityDto>();
+            if (response?.Data == null)
+            {
+                return [];
+            }
+
+            return response.Data;
         }
 
         public async Task<ActivityDto?> GetActivityByIdAsync(int activityId)
         {
-            var response = await _http.GetFromJsonAsync<ApiResponse<ActivityDto>>($"api/activities/{activityId}");
+            var response = await _httpClient.GetFromJsonAsync<ApiResponse<ActivityDto>>($"api/activities/{activityId}");
 
             return response?.Data;
         }
 
         public async Task<ActivityDto?> CreateActivityAsync(CreateActivityDto activityData)
         {
-            var response = await _http.PostAsJsonAsync("api/activities", activityData);
+            var response = await _httpClient.PostAsJsonAsync("api/activities", activityData);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -42,7 +48,7 @@ namespace Won.Web.Services.Activities
 
         public async Task<ActivityDto?> UpdateActivityAsync(int activityId, UpdateActivityDto updatedActivityData)
         {
-            var response = await _http.PatchAsJsonAsync($"api/activities/{activityId}", updatedActivityData);
+            var response = await _httpClient.PatchAsJsonAsync($"api/activities/{activityId}", updatedActivityData);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -56,7 +62,7 @@ namespace Won.Web.Services.Activities
 
         public async Task<bool> DeleteActivityAsync(int activityId)
         {
-            var response = await _http.DeleteAsync($"api/activities/{activityId}");
+            var response = await _httpClient.DeleteAsync($"api/activities/{activityId}");
 
             return response.IsSuccessStatusCode;
         }
