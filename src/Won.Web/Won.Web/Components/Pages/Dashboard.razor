@@ -15,14 +15,15 @@
 else
 {
     <div class="is-flex is-justify-content-flex-end mb-4">
-        <NavLink class="button is-link is-normal" href="/trips/create">Create Trip</NavLink>
+        <NavLink class="button is-primary mb-2" href="/trips/create">Add New Trip</NavLink>
     </div>
 
-    <div class="widget-container is-flex is-gap-4">
-        <RecentTripsWidget Trips="trips" />
-        <UpcomingTripsComponent Trips="trips" />
-        <MostActiveTripWidget Trips="trips" />
+    <div class="columns is-desktop">
+        <div class="column"><RecentTripsWidget Trips="trips" /></div>
+        <div class="column"><UpcomingTripsComponent Trips="trips" /></div>
+        <div class="column"><MostActiveTripWidget Trips="trips" /></div>
     </div>
+
 }
 
 @code {
