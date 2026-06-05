@@ -178,10 +178,7 @@ else
                 Edit Trip
             </NavLink>
 
-            <button class="button is-danger"
-                    @onclick="DeleteTripAsync">
-                Delete Trip
-            </button>
+            <DeleteTripButton TripId="@_trip.TripId" />
         </div>
     </div>
 
@@ -325,35 +322,6 @@ else
         finally
         {
             _isGeneratingSuggestions = false;
-        }
-    }
-
-    private async Task DeleteTripAsync()
-    {
-        if (_trip is null)
-        {
-            NotificationService.ShowError("Trip details could not be found.");
-            return;
-        }
-
-        try
-        {
-            var response =
-                await TripsService.DeleteTripAsync(_trip.TripId);
-
-            if (response.Success)
-            {
-                NotificationService.ShowSuccess(response.Message);
-                Navigation.NavigateTo("/trips");
-                return;
-            }
-
-            NotificationService.ShowError(response.Message);
-        }
-        catch
-        {
-            NotificationService.ShowError(
-                "Something went wrong while deleting the trip.");
         }
     }
 }
