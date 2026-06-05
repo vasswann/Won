@@ -171,13 +171,11 @@ else
                 Back to Trips
             </NavLink>
 
-            <NavLink href="@($"/trips/edit/{_trip.TripId}")" class="button is-info">
+            <NavLink href="@($"/trips/update/{_trip.TripId}")" class="button is-info">
                 Edit Trip
             </NavLink>
 
-            <button class="button is-danger">
-                Delete Trip
-            </button>
+            <DeleteTripButton TripId="@_trip.TripId" />
         </div>
     </div>
 

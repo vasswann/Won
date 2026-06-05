@@ -1,4 +1,5 @@
-﻿@inject HttpClient Http
+﻿@using Won.Web.Services.Trips
+@inject TripsService TripsService
 @inject NavigationManager Navigation
 
 @if (!showConfirmation)
@@ -41,9 +42,9 @@ else
 
     private async Task DeleteTrip()
     {
-        var response = await Http.DeleteAsync($"api/trips/{TripId}");
+        var success = await TripsService.DeleteTripAsync(TripId);
 
-        if (response.IsSuccessStatusCode)
+        if (success)
         {
             Navigation.NavigateTo("/trips");
         }
