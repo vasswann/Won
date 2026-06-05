@@ -1,94 +1,82 @@
 ﻿using Won.Shared.Common;
 using Won.Shared.Dtos;
 
-namespace Won.Web.Services.Trips
+namespace Won.Web.Services.Trips;
+
+public class TripsService
 {
-    public class TripsService
+    private readonly HttpClient _httpClient;
+
+    public TripsService(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
+        _httpClient = httpClient;
+    }
 
-        public TripsService(HttpClient httpClient)
+    public async Task<List<TripListItemDto>> GetTripsAsync()
+    {
+        var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<TripDto>>>("api/trips");
+
+        if (response?.Data == null)
         {
-            _httpClient = httpClient;
+            return [];
         }
 
-
-        public async Task<List<TripListItemDto>> GetTripsAsync()
+        return response.Data.Select(trip => new TripListItemDto
         {
-            var response =
-                await _httpClient.GetFromJsonAsync<ApiResponse<List<TripDto>>>("api/trips");
+            TripId = trip.TripId,
+            Name = trip.Name,
+            Location = trip.Location,
+            StartDate = trip.StartDate,
+            EndDate = trip.EndDate
+        }).ToList();
+    }
 
-            if (response?.Data == null)
-            {
-                return [];
-            }
+    public async Task<TripDto?> GetTripByIdAsync(int tripId)
+    {
+        var response = await _httpClient.GetFromJsonAsync<ApiResponse<TripDto>>($"api/trips/{tripId}");
 
-            return response.Data.Select(trip => new TripListItemDto
-            {
-                TripId = trip.TripId,
-                Name = trip.Name,
-                Location = trip.Location,
-                StartDate = trip.StartDate,
-                EndDate = trip.EndDate
-            }).ToList();
-        }
+        return response?.Data;
+    }
 
-        public async Task<TripDto?> GetTripByIdAsync(int tripId)
-        {
-            var response =
-                await _httpClient.GetFromJsonAsync<ApiResponse<TripDto>>
-                ($"api/trips/{tripId}");
+    public async Task<ApiResponse<TripDto>> CreateTripAsync(CreateTripDto tripData)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/trips", tripData);
 
-            return response?.Data;
-        }
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<TripDto>>();
 
-        public async Task<TripDto?> CreateTripAsync(CreateTripDto tripData)
-        {
-            var response =
-                await _httpClient.PostAsJsonAsync(
-                    "api/Trips",
-                    tripData);
+        return result ?? new ApiResponse<TripDto>
+               {
+                   Success = false,
+                   StatusCode = (int)response.StatusCode,
+                   Message = "Unable to process create trip response."
+               };
+    }
 
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
+    public async Task<ApiResponse<TripDto>> UpdateTripAsync(int tripId, UpdateTripDto tripData)
+    {
+        var response = await _httpClient.PatchAsJsonAsync($"api/trips/{tripId}", tripData);
 
-            var apiResponse =
-                await response.Content.ReadFromJsonAsync<ApiResponse<TripDto>>();
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<TripDto>>();
 
-            return apiResponse?.Data;
-        }
+        return result ?? new ApiResponse<TripDto>
+               {
+                   Success = false,
+                   StatusCode = (int)response.StatusCode,
+                   Message = "Unable to process update trip response."
+               };
+    }
 
-        public async Task<TripDto?> UpdateTripAsync(
-            int tripId, 
-            UpdateTripDto tripData)
-        {
-            var response =
-                await _httpClient.PatchAsJsonAsync(
-                    $"api/Trips/{tripId}",
-                    tripData);
+    public async Task<ApiResponse<object>> DeleteTripAsync(int tripId)
+    {
+        var response = await _httpClient.DeleteAsync($"api/trips/{tripId}");
 
-            if(!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
 
-            var apiResponse =
-                await response.Content.ReadFromJsonAsync<ApiResponse<TripDto>>();
-
-            return apiResponse?.Data;
-        }
-
-        public async Task<bool> DeleteTripAsync(int tripId)
-        {
-            var response =
-                await _httpClient.DeleteAsync(
-                    $"api/Trips/{tripId}");
-
-                return response.IsSuccessStatusCode;
-
-       
-        }
+        return result ?? new ApiResponse<object>
+               {
+                   Success = false,
+                   StatusCode = (int)response.StatusCode,
+                   Message = "Unable to process delete trip response."
+               };
     }
 }

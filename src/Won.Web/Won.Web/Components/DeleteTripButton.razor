@@ -1,10 +1,13 @@
 ﻿@using Won.Web.Services.Trips
+@using Won.Web.Services.Notifications
+
 @inject TripsService TripsService
 @inject NavigationManager Navigation
+@inject NotificationService NotificationService
 
 @if (!showConfirmation)
 {
-    <button class="button is-danger mt-3" @onclick="ShowConfirmation">
+    <button class="button is-danger" @onclick="ShowConfirmation">
         Delete Trip
     </button>
 }
@@ -42,11 +45,24 @@ else
 
     private async Task DeleteTrip()
     {
-        var success = await TripsService.DeleteTripAsync(TripId);
-
-        if (success)
+        try
         {
-            Navigation.NavigateTo("/trips");
+            var response =
+                await TripsService.DeleteTripAsync(TripId);
+
+            if (response.Success)
+            {
+                NotificationService.ShowSuccess(response.Message);
+                Navigation.NavigateTo("/trips");
+                return;
+            }
+
+            NotificationService.ShowError(response.Message);
+        }
+        catch
+        {
+            NotificationService.ShowError(
+                "Something went wrong while deleting the trip.");
         }
     }
 }
