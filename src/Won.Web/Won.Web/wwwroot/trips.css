@@ -12,14 +12,24 @@
     padding: 20px;
     border-radius: 15px;
     max-width: auto;
-    background-color: mediumaquamarine !important;
     margin-bottom: 20px;
+}
+.trip-item {
+    margin-bottom: 1.25rem;
 }
 
 .card-content:hover{
-    background-color: aquamarine !important;
+/*    background-color: aquamarine !important;*/
 }
 
 #create-trip-button {
     margin-bottom: 24px !important;
+}
+
+.dashboard-container {
+    background: #1fb29c2e;
+}
+
+.box.widget {
+    background: #1fb29c2e;
 }

@@ -7,13 +7,19 @@
 @inject TripsService TripsService
 
 <PageTitle>Trips</PageTitle>
-<div class="section">
-    <h1 class="title is-2">Trips</h1>
+
+<section>
+    <h1 class="title is-2">All Trips</h1>
 
     <p class="subtitle is-6">
-        View your planned trips.
+        View your planned trips
     </p>
-    <NavLink class="button is-link is-normal" href="/trips/create">Create Trip</NavLink>
+
+    <div class="is-flex is-justify-content-flex-end mb-4">
+        <NavLink class="button is-primary mb-2" href="/trips/create">Add New Trip</NavLink>
+    </div>
+
+    @* <NavLink class="button is-primary mb-4" href="/trips/create">Create Trip</NavLink> *@
 
     @if (_trips is null)
     {
@@ -32,7 +38,7 @@
             </div>
         </div>
     }
-</div>
+</section>
 
 @code {
     private List<TripListItemDto>? _trips;

@@ -2,10 +2,11 @@
 @using Won.Web.Components.Trips
 @inject NavigationManager Navigation
 
-<div class="box upcoming-trips-widget">
-    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+<div class="box dashboard-container">
+    @* <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
         <h3 class="title is-4 mb-0">Upcoming Trips</h3>
-    </div>
+    </div> *@
+    <h3 class="title is-4 mb-5">Upcoming Trips</h3>
 
     @if (UpcomingTrips.Count == 0)
     {

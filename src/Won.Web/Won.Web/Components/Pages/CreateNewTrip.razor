@@ -9,9 +9,19 @@
 @inject NavigationManager Navigation
 @inject NotificationService NotificationService
 
-<h3>Plan your next trip!</h3>
+<PageTitle>Add Trip</PageTitle>
 
-<TripForm MyTrip="_trip" OnSubmit="@CreateTrip" />
+<section>
+
+    <h1 class="title is-2">Add Trip</h1>
+
+    <p class="subtitle is-6">
+        Plan your next trip
+    </p>
+
+    <TripForm MyTrip="_trip" OnSubmit="@CreateTrip" />
+
+</section>
 
 
 @code{
