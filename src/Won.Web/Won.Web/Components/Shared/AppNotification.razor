@@ -1,0 +1,53 @@
+﻿@using Won.Web.Services.Notifications
+@implements IDisposable
+
+@inject NotificationService NotificationService
+
+@if (NotificationService.Notifications.Count > 0)
+{
+    <div class="notification-container">
+        @foreach (var notification in NotificationService.Notifications)
+        {
+            <div class="notification @GetBulmaClass(notification.Type)">
+                <button class="delete"
+                        @onclick="() => RemoveNotification(notification.Id)">
+                </button>
+
+                @notification.Message
+            </div>
+        }
+    </div>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        NotificationService.OnChange += HandleNotificationChanged;
+    }
+
+    private void HandleNotificationChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void RemoveNotification(Guid id)
+    {
+        NotificationService.Remove(id);
+    }
+
+    private string GetBulmaClass(NotificationType type)
+    {
+        return type switch
+        {
+            NotificationType.Success => "is-success",
+            NotificationType.Error => "is-danger",
+            NotificationType.Warning => "is-warning",
+            _ => "is-info"
+        };
+    }
+
+    public void Dispose()
+    {
+        NotificationService.OnChange -= HandleNotificationChanged;
+    }
+}

@@ -1,6 +1,7 @@
 using Won.Web.Components;
 using Won.Web.Services.Activities;
 using Won.Web.Services.Locations;
+using Won.Web.Services.Notifications;
 using Won.Web.Services.Trips;
 using Won.Web.Services.Weather;
 
@@ -25,6 +26,7 @@ builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<LocationImageService>();
 builder.Services.AddScoped<ActivitySuggestionService>();
 builder.Services.AddSingleton<ActivitySuggestion>();
+builder.Services.AddScoped<NotificationService>();
 
 var app = builder.Build();
 
