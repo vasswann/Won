@@ -4,19 +4,27 @@
 
 @using Won.Shared.Dtos
 @using Won.Web.Components.Activities
+@using Won.Web.Components.Shared
 @using Won.Web.Services.Locations
 @using Won.Web.Services.Trips
 @using Won.Web.Services.Weather
 @using Won.Web.Services.Activities
+@using Won.Web.Services.Notifications
 
 @inject TripsService TripsService
 @inject WeatherService WeatherService
 @inject LocationImageService LocationImageService
 @inject ActivitySuggestionService ActivitySuggestionService
+@inject NotificationService NotificationService
+@inject NavigationManager Navigation
 
 <PageTitle>Trip Details</PageTitle>
 
-@if (_trip is null)
+@if (_isLoadingTrip)
+{
+    <LoadingState Message="Loading trip details..." />
+}
+else if (_trip is null)
 {
     <article class="message is-warning">
         <div class="message-body">
@@ -152,7 +160,13 @@ else
                 </p>
             </div>
         </div>
+  
+        <ActivityList TripId="@TripId" />
 
+        <NavLink class="button is-primary" href="@($"/activities/create/{TripId}")">
+            Add Activity
+        </NavLink>
+  
         <hr />
 
         <div class="buttons">
@@ -187,7 +201,11 @@ else
                 }
             </button>
 
-            @if (_activitySuggestions.Count > 0)
+            @if (_isGeneratingSuggestions)
+            {
+                <LoadingState Message="Generating AI activity suggestions..." />
+            }
+            else if (_activitySuggestions.Count > 0)
             {
                 <div class="columns is-multiline is-align-items-stretch">
                     @foreach (var activity in _activitySuggestions)
@@ -213,24 +231,25 @@ else
     private LocationImageDto? _locationImage;
     private List<ActivitySuggestionDto> _activitySuggestions = [];
     private bool _isGeneratingSuggestions;
+    private bool _isLoadingTrip = true;
 
     protected override async Task OnInitializedAsync()
     {
+        _isLoadingTrip = true;
+
         _trip = await TripsService.GetTripByIdAsync(TripId);
 
         if (_trip is null)
         {
+            _isLoadingTrip = false;
             return;
         }
 
         _locationImage = await LocationImageService.GetLocationImageAsync(_trip.Location);
 
-        if (_locationImage is null)
-        {
-            return;
-        }
-
         await LoadWeatherAsync();
+
+        _isLoadingTrip = false;
     }
 
     private async Task LoadWeatherAsync()
@@ -263,29 +282,46 @@ else
 
     private async Task GenerateActivitySuggestionsAsync()
     {
-        if(_trip is null)
+        if (_trip is null)
         {
+            NotificationService.ShowError("Trip details could not be found.");
             return;
         }
 
-        _isGeneratingSuggestions = true;
-
-        var request = new ActivitySuggestionRequestDto
+        try
         {
-            Location = _trip.Location,
-            StartDate = _trip.StartDate,
-            EndDate = _trip.EndDate,
-            Budget = _trip.Budget,
-            GroupSize = _trip.GroupSize
-        };
+            _isGeneratingSuggestions = true;
 
-        var response = await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+            var request = new ActivitySuggestionRequestDto
+            {
+                Location = _trip.Location,
+                StartDate = _trip.StartDate,
+                EndDate = _trip.EndDate,
+                Budget = _trip.Budget,
+                GroupSize = _trip.GroupSize
+            };
 
-        if(response.Success)
-        {
-            _activitySuggestions = response.Data ?? [];
+            var response =
+                await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+
+            if (response.Success)
+            {
+                _activitySuggestions = response.Data ?? [];
+                NotificationService.ShowSuccess(response.Message);
+            }
+            else
+            {
+                NotificationService.ShowError(response.Message);
+            }
         }
-
-        _isGeneratingSuggestions = false;
+        catch
+        {
+            NotificationService.ShowError(
+                "Something went wrong while generating activity suggestions.");
+        }
+        finally
+        {
+            _isGeneratingSuggestions = false;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using Won.Web.Components.Shared
 
 <div class="app-shell">
     <aside class="app-sidebar">
@@ -6,6 +7,8 @@
     </aside>
 
     <div class="app-main">
+        <AppNotification @rendermode="InteractiveServer" />
+
         <main class="app-content">
             @Body
         </main>
