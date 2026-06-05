@@ -152,7 +152,13 @@ else
                 </p>
             </div>
         </div>
+  
+        <ActivityList TripId="@TripId" />
 
+        <NavLink class="button is-primary" href="@($"/activities/create/{TripId}")">
+            Add Activity
+        </NavLink>
+  
         <hr />
 
         <div class="buttons">

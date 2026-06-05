@@ -1,0 +1,58 @@
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+
+@if (!showConfirmation)
+{
+    <button class="button is-danger is-small" @onclick="ShowConfirmation">
+        Delete
+    </button>
+}
+else
+{
+    <div class="buttons">
+
+        <button class="button is-danger is-small"
+                type="button"
+                @onclick="DeleteActivity">
+            Yes, Delete
+        </button>
+
+        <button class="button is-light is-small"
+                type="button"
+                @onclick="CancelDelete">
+            Cancel
+        </button>
+
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int ActivityId { get; set; }
+
+    [Parameter]
+    public int TripId { get; set; }
+
+    private bool showConfirmation;
+
+    private void ShowConfirmation()
+    {
+        showConfirmation = true;
+    }
+
+    private void CancelDelete()
+    {
+        showConfirmation = false;
+    }
+
+    private async Task DeleteActivity()
+    {
+        var response = await Http.DeleteAsync($"api/activities/{ActivityId}");
+        Navigation.NavigateTo(Navigation.Uri, true);
+
+        if (response.IsSuccessStatusCode)
+        {
+            showConfirmation = false;
+        }
+    }
+}
