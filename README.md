@@ -293,19 +293,6 @@ Lauraine Griffins
 https://github.com/Meanderling
 ---
 
-## Screenshots
-
-Add screenshots of:
-
-* Login
-* Registration
-* Trips Dashboard
-* Trip Details
-* Weather Forecasts
-* AI Activity Suggestions
-
----
-
 ## License
 
 This project was created for educational purposes as part of the Northcoders Software Development Bootcamp.
