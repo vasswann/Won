@@ -1,11 +1,17 @@
 ﻿@page "/register"
 @rendermode InteractiveServer
-@inject HttpClient Http
+
 @using Won.Shared.Dtos
 @using System.Net.Http.Json
-@layout AuthLayout
 @using Won.Web.Components.Layout
 @using System.ComponentModel.DataAnnotations
+@using Won.Web.Services.Notifications
+
+@layout AuthLayout
+
+@inject HttpClient Http
+@inject NotificationService NotificationService
+@inject NavigationManager Navigation
 
 
 <div class="has-text-centered mb-5">
@@ -92,10 +98,6 @@
         </ul>
     }
 
-    @if (!string.IsNullOrWhiteSpace(successMessage))
-    {
-        <p class="has-text-success">@successMessage</p>
-    }
     <p class="has-text-centered mt-4">
         Already have an account?
         <NavLink href="/login">
@@ -108,12 +110,13 @@
 @code {
     private readonly RegisterModel _model = new();
     private string[] errors = [];
-    private string successMessage = "";
 
     private async Task HandleRegisterAsync()
     {
         try
         {
+            errors = [];
+
             var request = new RegisterRequestDto
             {
                 FirstName = _model.FirstName,
@@ -129,19 +132,16 @@
 
             if (response.IsSuccessStatusCode)
             {
-                successMessage = "Registration successful!";
-                errors = [];
+                NotificationService.ShowSuccess("Registration successful. Please log in.");
+                Navigation.NavigateTo("/login");
+                return;
             }
-            else
-            {
-                successMessage = "";
-                errors = [$"Status code: {response.StatusCode}"];
-            }
+
+            errors = ["Registration failed. This email may already be registered."];
         }
-        catch (Exception ex)
+        catch
         {
-            successMessage = "";
-            errors = [ex.Message];
+            errors = ["Something went wrong while registering."];
         }
     }
 
