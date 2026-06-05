@@ -65,7 +65,11 @@
     [Parameter]
     public int TripId { get; set; }
 
-    private CreateActivityDto NewActivity = new();
+    private CreateActivityDto NewActivity = new() 
+    {
+        StartDate = DateTime.Today,
+        EndDate = DateTime.Today
+    };
 
     protected override void OnInitialized()
     {
