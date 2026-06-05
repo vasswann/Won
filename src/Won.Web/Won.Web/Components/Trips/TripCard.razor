@@ -1,18 +1,16 @@
 ﻿@using Won.Shared.Dtos
 
-<NavLink href="@($"/trips/{Trip.TripId}")" class="card">
+<NavLink href="@($"/trips/{Trip.TripId}")" class="box widget">
     <div class="card-content">
         <p class="title is-4">@Trip.Name</p>
         <div class="trip-data">
-            <p class="subtitle is-6">
-                <strong class="has-text-inherit">Location:</strong> @Trip.Location
-            </p>
+
+            <p><span class="has-text-weight-bold mb-0">Location: </span> @Trip.Location</p>
 
             <div class="content">
-                <p>
-                    <strong class="has-text-inherit">Dates:</strong>
-                    @Trip.StartDate.ToString("dd MMM yyyy") - @Trip.EndDate.ToString("dd MMM yyyy")
-                </p>
+
+                <p class="mb-0"><span class="has-text-weight-bold">Start: </span>@Trip.StartDate.ToString("dd MMM yyyy")</p>
+                <pclass ="mb-0"><span class="has-text-weight-bold">End: </span>@Trip.EndDate.ToString("dd MMM yyyy")</pclass>
             </div>
         </div>
     </div>

@@ -2,10 +2,9 @@
 @using Won.Web.Components.Trips
 @inject NavigationManager Navigation
 
-<div class="box recent-trips-widget">
-    <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
-        <h3 class="title is-4 mb-0">Recent Trips</h3>
-    </div>
+<div class="box dashboard-container">
+
+    <h3 class="title is-4 mb-5">Recent Trips</h3>
 
     @if (RecentTrips.Count == 0)
     {
@@ -15,7 +14,7 @@
     {
         @foreach (var trip in RecentTrips)
         {
-            <div class="trip-item">
+            <div class="trip-item mb-4">
                 <TripCard Trip="trip" />
             </div>
         }
