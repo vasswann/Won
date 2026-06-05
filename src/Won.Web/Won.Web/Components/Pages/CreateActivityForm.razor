@@ -4,6 +4,7 @@
 
 @inject Won.Web.Services.Activities.ActivityService ActivityService
 @inject NavigationManager Navigation
+@inject Won.Web.Services.Activities.ActivitySuggestion ActivitySuggestion
 
 <PageTitle>Create Activity</PageTitle>
 
@@ -70,6 +71,15 @@
     protected override void OnInitialized()
     {
         NewActivity.TripId = TripId;
+        NewActivity.ActivityDateTime = DateTime.Now;
+        if (ActivitySuggestion.SelectedActivity != null)
+        {
+            var activity = ActivitySuggestion.SelectedActivity;
+
+            NewActivity.Name = activity.Title;
+            NewActivity.Cost = int.Parse(activity.EstimatedCost);
+        }
+        ActivitySuggestion.SelectedActivity = null;
     }
 
     private async Task CreateActivity()
