@@ -211,7 +211,7 @@ else
                     @foreach (var activity in _activitySuggestions)
                     {
                         <div class="column is-one-third is-flex">
-                            <ActivitySuggestionCard Activity="activity" />
+                            <ActivitySuggestionCard Activity="activity" TripId="@TripId" />
                         </div>
                     }
                 </div>

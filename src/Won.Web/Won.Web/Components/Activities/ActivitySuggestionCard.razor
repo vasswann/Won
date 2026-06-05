@@ -1,4 +1,6 @@
-﻿@using Won.Shared.Dtos
+﻿@inject Won.Web.Services.Activities.ActivitySuggestion ActivitySuggestion
+@inject NavigationManager Navigation
+@using Won.Shared.Dtos
 
 <div class="card is-flex is-flex-direction-column h-100">
     <div class="card-content is-flex-grow-1">
@@ -22,13 +24,23 @@
     </div>
 
     <footer class="card-footer mt-auto">
-        <button class="card-footer-item button is-white">
+        <button class="card-footer-item button is-white" @onclick="SaveToTrip">
             Save to trip
-        </button>
+            </button>
     </footer>
 </div>
 
 @code {
     [Parameter]
     public ActivitySuggestionDto Activity { get; set; } = new();
-}
+
+    [Parameter]
+    public int TripId { get; set; }
+
+    private void SaveToTrip()
+    {
+        ActivitySuggestion.SelectedActivity = Activity;
+
+        Navigation.NavigateTo($"/activities/create/{TripId}");
+    }
+    }
