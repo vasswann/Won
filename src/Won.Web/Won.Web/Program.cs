@@ -25,6 +25,7 @@ builder.Services.AddScoped<ActivityService>();
 builder.Services.AddScoped<WeatherService>();
 builder.Services.AddScoped<LocationImageService>();
 builder.Services.AddScoped<ActivitySuggestionService>();
+builder.Services.AddSingleton<ActivitySuggestion>();
 builder.Services.AddScoped<NotificationService>();
 
 var app = builder.Build();

@@ -1,11 +1,16 @@
+@page "/"
 @page "/login"
 @rendermode InteractiveServer
-@inject HttpClient Http
+
+@using Won.Web.Services.Notifications
 @using Won.Shared.Dtos
 @using System.Net.Http.Json
 @using Won.Web.Components.Layout
 @using System.ComponentModel.DataAnnotations
+
+@inject HttpClient Http
 @inject NavigationManager Navigation
+@inject NotificationService NotificationService
 
 @layout AuthLayout
 
@@ -72,11 +77,6 @@
         </ul>
     }
 
-    @if (!string.IsNullOrWhiteSpace(successMessage))
-    {
-        <p class="has-text-success">@successMessage</p>
-    }
-
     <p class="has-text-centered mt-4">
         Don't have an account?
         <NavLink href="/register">
@@ -89,12 +89,13 @@
     private readonly LoginModel _model = new();
 
     private string[] errors = [];
-    private string successMessage = "";
 
     private async Task HandleLoginAsync()
     {
         try
         {
+            errors = [];
+
             var request = new LoginRequestDto
             {
                 Email = _model.Email,
@@ -114,29 +115,22 @@
 
                 if (loginResponse == null)
                 {
-                    successMessage = "";
-                    errors = ["No login response received"];
+                    errors = ["No login response received."];
                     return;
-
-
                 }
 
                 var token = loginResponse.Token;
 
-                successMessage = "Login successful!";
-                errors = [];
+                NotificationService.ShowSuccess("Login successful.");
                 Navigation.NavigateTo("/dashboard");
+                return;
             }
-            else
-            {
-                successMessage = "";
-                errors = [$"Status code: {response.StatusCode}"];
-            }
+
+            errors = ["Invalid email or password."];
         }
-        catch (Exception ex)
+        catch
         {
-            successMessage = "";
-            errors = [ex.Message];
+            errors = ["Something went wrong while logging in."];
         }
     }
 

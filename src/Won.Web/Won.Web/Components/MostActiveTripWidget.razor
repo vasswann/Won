@@ -14,7 +14,7 @@
     }
     else if (TopActiveTrips.Count == 0)
     {
-        <p class="has-text-grey is-size-7">No trips found.</p>
+        <p class="has-text-grey is-size-7">No activities found.</p>
     }
     else
     {
@@ -48,19 +48,32 @@
     private bool isLoading = true;
 
     private List<TripListItemDto> TopActiveTrips =>
-        Trips.Where(trip => activitiesByTrip.ContainsKey(trip.TripId))
-            .OrderByDescending(trip => activitiesByTrip[trip.TripId].Count)
+        Trips
+            .Select(trip => new
+            {
+                Trip = trip,
+                Activities = activitiesByTrip.GetValueOrDefault(trip.TripId) ?? new List<ActivityDto>()
+            })
+            .Where(x => x.Activities.Any())
+            .OrderByDescending(x => x.Activities.Count)
             .Take(3)
+            .Select(x => x.Trip)
             .ToList();
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Trips == null || Trips.Count == 0)return;
-
         isLoading = true;
 
-        var trips = Trips.ToDictionary(trip => trip.TripId, trip => ActivityService
-                        .GetActivitiesByTripIdAsync(trip.TripId));
+        if (Trips == null || Trips.Count == 0)
+        {
+            isLoading = false;
+            return;
+        }
+
+        var trips = Trips.ToDictionary(
+            trip => trip.TripId,
+            trip => ActivityService.GetActivitiesByTripIdAsync(trip.TripId)
+        );
 
         var results = await Task.WhenAll(trips.Values);
 
@@ -72,9 +85,5 @@
         }
 
         isLoading = false;
-    }
-    private void GoToTrips(int tripId)
-    {
-        Navigation.NavigateTo($"/trips/{tripId}");
     }
 }
