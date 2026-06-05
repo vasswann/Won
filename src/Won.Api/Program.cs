@@ -117,6 +117,8 @@ connectionString = connectionString.Replace("{SQL_PASSWORD}", sqlPassword);
 
 builder.Services.AddDbContext<WonDbContext>(options => options.UseSqlServer(connectionString));
 
+builder.Services.AddHealthChecks().AddDbContextCheck<WonDbContext>();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -154,5 +156,7 @@ app.MapGet("/env-test", () =>
 });
 
 app.MapControllers();
+
+app.MapHealthChecks("/health");
 
 app.Run();
