@@ -72,14 +72,14 @@
     {
         NewActivity.TripId = TripId;
         NewActivity.ActivityDateTime = DateTime.Now;
+        NewActivity.Cost = 50;
         if (ActivitySuggestion.SelectedActivity != null)
         {
             var activity = ActivitySuggestion.SelectedActivity;
 
             NewActivity.Name = activity.Title;
-            NewActivity.Cost = int.Parse(activity.EstimatedCost);
+
         }
-        ActivitySuggestion.SelectedActivity = null;
     }
 
     private async Task CreateActivity()
@@ -89,6 +89,7 @@
         if (created is not null)
         {
             Navigation.NavigateTo($"/trips/{TripId}");
+            ActivitySuggestion.SelectedActivity = null;
         }
     }
 }
