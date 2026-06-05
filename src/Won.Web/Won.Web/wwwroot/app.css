@@ -37,3 +37,15 @@ a, .btn-link {
 .trip-hero-image {
     object-fit: cover;
 }
+
+.notification-container {
+    position: fixed;
+    top: 1rem;
+    left: 18rem; 
+    right: 1rem;
+    z-index: 9999;
+}
+
+    .notification-container .notification {
+        margin-bottom: 0.75rem;
+    }

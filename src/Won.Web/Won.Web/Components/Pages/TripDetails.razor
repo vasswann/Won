@@ -9,11 +9,14 @@
 @using Won.Web.Services.Trips
 @using Won.Web.Services.Weather
 @using Won.Web.Services.Activities
+@using Won.Web.Services.Notifications
 
 @inject TripsService TripsService
 @inject WeatherService WeatherService
 @inject LocationImageService LocationImageService
 @inject ActivitySuggestionService ActivitySuggestionService
+@inject NotificationService NotificationService
+@inject NavigationManager Navigation
 
 <PageTitle>Trip Details</PageTitle>
 
@@ -279,29 +282,46 @@ else
 
     private async Task GenerateActivitySuggestionsAsync()
     {
-        if(_trip is null)
+        if (_trip is null)
         {
+            NotificationService.ShowError("Trip details could not be found.");
             return;
         }
 
-        _isGeneratingSuggestions = true;
-
-        var request = new ActivitySuggestionRequestDto
+        try
         {
-            Location = _trip.Location,
-            StartDate = _trip.StartDate,
-            EndDate = _trip.EndDate,
-            Budget = _trip.Budget,
-            GroupSize = _trip.GroupSize
-        };
+            _isGeneratingSuggestions = true;
 
-        var response = await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+            var request = new ActivitySuggestionRequestDto
+            {
+                Location = _trip.Location,
+                StartDate = _trip.StartDate,
+                EndDate = _trip.EndDate,
+                Budget = _trip.Budget,
+                GroupSize = _trip.GroupSize
+            };
 
-        if(response.Success)
-        {
-            _activitySuggestions = response.Data ?? [];
+            var response =
+                await ActivitySuggestionService.GetActivitySuggestionsAsync(request);
+
+            if (response.Success)
+            {
+                _activitySuggestions = response.Data ?? [];
+                NotificationService.ShowSuccess(response.Message);
+            }
+            else
+            {
+                NotificationService.ShowError(response.Message);
+            }
         }
-
-        _isGeneratingSuggestions = false;
+        catch
+        {
+            NotificationService.ShowError(
+                "Something went wrong while generating activity suggestions.");
+        }
+        finally
+        {
+            _isGeneratingSuggestions = false;
+        }
     }
 }
